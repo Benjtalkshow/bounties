@@ -1,25 +1,38 @@
+import { SiteFooter } from '@/components/layout/site-footer';
+import { SiteHeader } from '@/components/layout/site-header';
+import { Button } from '@/components/ui/button';
+import { HeroBackground } from '@/components/marketing/hero-background';
+import { Section } from '@/components/marketing/section';
+
 export default function Home() {
   return (
-    <main className='mx-auto flex min-h-screen w-full max-w-page flex-1 flex-col items-center justify-center gap-8 px-6 text-center'>
-      <span className='text-caption-sm text-primary-500 uppercase'>
-        Boundless
-      </span>
-      <h1 className='text-display-sm text-foreground'>
-        The place to discover <span className='text-primary-500'>builders</span>
-      </h1>
-      <p className='max-w-xl text-body-lg text-muted-foreground'>
-        Explore the builders, projects, and development teams shipping on
-        Boundless. This app displays the work. Creating and uploading happens in
-        the main Boundless app.
-      </p>
-      <div className='flex flex-wrap items-center justify-center gap-4'>
-        <button className='bg-primary-500 text-ink hover:bg-primary-400 active:bg-primary-600 h-12 rounded-lg px-6 text-base font-medium transition-colors'>
-          Explore builders
-        </button>
-        <button className='border-foreground/20 text-foreground/90 hover:border-foreground/35 hover:bg-foreground/6 h-12 rounded-lg border bg-transparent px-6 text-base font-medium transition-colors'>
-          View projects
-        </button>
-      </div>
-    </main>
+    <>
+      <SiteHeader />
+
+      <HeroBackground fieldHeight={640} fadeBottom>
+        <Section className='py-24 text-center lg:py-32'>
+          <span className='text-caption-sm text-primary-500 uppercase'>
+            Boundless Builders
+          </span>
+          <h1 className='mt-6 text-display-sm text-foreground lg:text-display-lg'>
+            Discover the builders shipping on{' '}
+            <span className='text-primary-500'>Stellar</span>
+          </h1>
+          <p className='mx-auto mt-6 max-w-2xl text-body-lg text-muted-foreground'>
+            Explore the projects, teams, and creators building across the
+            Boundless ecosystem. This app showcases the work. Creating and
+            uploading happens in the main Boundless app.
+          </p>
+          <div className='mt-10 flex flex-wrap items-center justify-center gap-4'>
+            <Button size='large'>Explore builders</Button>
+            <Button intent='secondary' appearance='outline' size='large'>
+              View projects
+            </Button>
+          </div>
+        </Section>
+      </HeroBackground>
+
+      <SiteFooter />
+    </>
   );
 }
