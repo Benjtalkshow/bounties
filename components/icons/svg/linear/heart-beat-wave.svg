@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-3190" y="-1127" width="5902" height="3379" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3132" transform="translate(-3190 -880)" fill="white"/>
+<g id="Group 268">
+<g id="Health">
+<rect x="-736" y="-144" width="1000" height="212" rx="24" fill="white"/>
+<g id="icon / heart-beat-wave">
+<path id="icon" d="M9.85695 3.94985C9.18644 2.27355 6.81356 2.27356 6.14305 3.94985L3.32297 11H2C1.44772 11 1 11.4478 1 12C1 12.5523 1.44772 13 2 13H3.32297C4.14078 13 4.87619 12.5021 5.17992 11.7428L8 4.69263L14.143 20.0502C14.8136 21.7265 17.1864 21.7265 17.857 20.0502L20.677 13L22 13C22.5523 13 23 12.5523 23 12C23 11.4478 22.5523 11 22 11H20.677C19.8592 11 19.1238 11.4979 18.8201 12.2573L16 19.3075L9.85695 3.94985Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

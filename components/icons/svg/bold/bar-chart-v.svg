@@ -1,0 +1,20 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-262.5" y="-2861" width="5902" height="3311" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3064" transform="translate(-262.5 -2614)" fill="white"/>
+<g id="Container_2">
+<g id="Dashboard">
+<rect x="-64" y="-192" width="1000" height="356" rx="24" fill="white"/>
+<g id="icon / bar-chart-v">
+<g id="Vector">
+<path d="M8.5 12H4.5C3.67157 12 3 12.6716 3 13.5V19.5C3 20.3284 3.67157 21 4.5 21H8.5C9.32843 21 10 20.3284 10 19.5V13.5C10 12.6716 9.32843 12 8.5 12Z" fill="black"/>
+<path d="M19.5 3H15.5C14.6716 3 14 3.67157 14 4.5V19.5C14 20.3284 14.6716 21 15.5 21H19.5C20.3284 21 21 20.3284 21 19.5V4.5C21 3.67157 20.3284 3 19.5 3Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

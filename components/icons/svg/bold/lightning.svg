@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-4991.5" y="-455" width="5902" height="3311" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3064" transform="translate(-4991.5 -208)" fill="white"/>
+<g id="Container_2">
+<g id="Weather">
+<rect x="-288" y="-144" width="1000" height="404" rx="24" fill="white"/>
+<g id="icon / lightning">
+<path id="icon" d="M11.0438 3.14358L6.31448 13.7408C6.16689 14.0715 6.40891 14.4445 6.77107 14.4445H11.5004C11.7765 14.4445 12.0004 14.6684 12.0004 14.9445V20.6529C12.0004 21.1925 12.7371 21.3494 12.957 20.8566L17.6863 10.2594C17.8339 9.92871 17.5919 9.55566 17.2297 9.55566H12.5004C12.2243 9.55566 12.0004 9.3318 12.0004 9.05566V3.34735C12.0004 2.80774 11.2637 2.65081 11.0438 3.14358Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

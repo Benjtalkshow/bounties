@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-3867.5" y="-2980" width="5902" height="3311" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3064" transform="translate(-3867.5 -2733)" fill="white"/>
+<g id="Container_2">
+<g id="Transport">
+<rect x="-288" y="-384" width="1000" height="452" rx="24" fill="white"/>
+<g id="icon / map-marker">
+<path id="icon" fill-rule="evenodd" clip-rule="evenodd" d="M10.3177 19.3831L6.48612 13.4229C4.55149 10.4135 5.38721 6.40867 8.36399 4.42415C10.5658 2.95627 13.4343 2.95627 15.6361 4.42415C18.6129 6.40867 19.4486 10.4135 17.514 13.4229L13.6824 19.3831C12.8951 20.6078 11.105 20.6078 10.3177 19.3831ZM12 13.5001C13.933 13.5001 15.5 11.9331 15.5 10.0001C15.5 8.06712 13.933 6.50011 12 6.50011C10.067 6.50011 8.50004 8.06712 8.50004 10.0001C8.50004 11.9331 10.067 13.5001 12 13.5001Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-522" y="-893" width="5902" height="3379" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3132" transform="translate(-522 -646)" fill="white"/>
+<g id="Group 268">
+<g id="Arrows">
+<rect x="-288" y="-192" width="1000" height="644" rx="24" fill="white"/>
+<g id="icon / chevron-down">
+<path id="icon" d="M2.81464 8.7282L10.6293 16.0832C11.3994 16.808 12.6006 16.808 13.3707 16.0832L21.1854 8.7282C21.5875 8.34969 21.6067 7.71681 21.2282 7.31464C20.8497 6.91247 20.2168 6.89329 19.8146 7.2718L12 14.6268L4.18537 7.2718C3.78319 6.89329 3.15032 6.91246 2.7718 7.31464C2.39329 7.71681 2.41246 8.34969 2.81464 8.7282Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

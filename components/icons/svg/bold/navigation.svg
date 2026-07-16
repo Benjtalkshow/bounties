@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-4091.5" y="-2740" width="5902" height="3311" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3064" transform="translate(-4091.5 -2493)" fill="white"/>
+<g id="Container_2">
+<g id="Transport">
+<rect x="-512" y="-144" width="1000" height="452" rx="24" fill="white"/>
+<g id="icon / navigation">
+<path id="icon" d="M10.6322 5.03973L4.35758 18.9832C3.82857 20.1588 4.93092 21.41 6.16379 21.0333L11.5617 19.3839C11.8474 19.2966 12.1527 19.2966 12.4384 19.3839L17.8363 21.0333C19.0691 21.41 20.1715 20.1588 19.6425 18.9832L13.3679 5.03973C12.8372 3.86046 11.1628 3.86045 10.6322 5.03973Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

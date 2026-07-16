@@ -1,0 +1,20 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-486.5" y="-2957" width="5902" height="3311" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3064" transform="translate(-486.5 -2710)" fill="white"/>
+<g id="Container_2">
+<g id="Dashboard">
+<rect x="-288" y="-288" width="1000" height="356" rx="24" fill="white"/>
+<g id="icon / column">
+<g id="Vector">
+<path d="M19.5 3H14.5C13.6716 3 13 3.67157 13 4.5V19.5C13 20.3284 13.6716 21 14.5 21H19.5C20.3284 21 21 20.3284 21 19.5V4.5C21 3.67157 20.3284 3 19.5 3Z" fill="black"/>
+<path d="M2 4.5L2 19.5C2 20.3284 2.67157 21 3.5 21H8.5C9.32843 21 10 20.3284 10 19.5V4.5C10 3.67157 9.32843 3 8.5 3L3.5 3C2.67157 3 2 3.67157 2 4.5Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>
