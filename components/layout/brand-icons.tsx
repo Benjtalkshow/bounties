@@ -1,7 +1,6 @@
 import { Mail } from 'lucide-react';
 
-/** Social channels that have a brand glyph. Mirrors the marketing nav config. */
-export type SocialKey = 'discord' | 'linkedin' | 'telegram' | 'x' | 'support';
+import type { SocialKey } from '@/config/marketing-nav';
 
 /**
  * Inline brand glyphs for social links. lucide-react dropped brand marks, so we
