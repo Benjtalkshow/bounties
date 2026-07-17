@@ -14,6 +14,16 @@ The public showcase for the builders, projects, and teams shipping on Boundless.
 
 ---
 
+> [!IMPORTANT]
+> **This codebase has been converted from `bounties` to Boundless Builders.**
+> Bounties was originally going to be a separate app, so this repository started
+> as the bounties frontend. We have since decided to incorporate bounties into
+> the main Boundless app, so this codebase has been repurposed as the Boundless
+> Builders showcase instead. The original bounties app is preserved under
+> [`archive/`](./archive).
+
+---
+
 ## Overview
 
 **Boundless Builders** is a display-only sub-app of the Boundless platform, served at
