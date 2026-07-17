@@ -1,280 +1,122 @@
-# Boundless Bounty
-
 <div align="center">
 
-![Stellar](https://img.shields.io/badge/Stellar-Blockchain-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
-![Status](https://img.shields.io/badge/status-in%20development-orange)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="public/brand/boundless-logo-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="public/brand/boundless-logo-light.svg">
+  <img alt="Boundless" src="public/brand/boundless-logo-dark.svg" width="380">
+</picture>
 
-**Inclusive Web3 Bounty Platform on Stellar**
+### Boundless Builders
 
-[Website](https://boundlessfi.xyz) • [Platform](https://bounty.boundlessfi.xyz) • [Discord](https://discord.gg/5Xpwrt9Q)
+The public showcase for the builders, projects, and teams shipping on Boundless.
 
 </div>
+
+---
+
+> [!IMPORTANT]
+> **This codebase has been converted from `bounties` to Boundless Builders.**
+> Bounties was originally going to be a separate app, so this repository started
+> as the bounties frontend. We have since decided to incorporate bounties into
+> the main Boundless app, so this codebase has been repurposed as the Boundless
+> Builders showcase instead. The original bounties app is preserved under
+> [`archive/`](./archive).
 
 ---
 
 ## Overview
 
-Boundless Bounty is an open-source bounty platform built on Stellar that supports all types of Web3 work—not just code. Contributors can earn XLM for design, writing, research, marketing, community management, and development tasks.
+**Boundless Builders** is a display-only sub-app of the Boundless platform, served at
+`builders.boundlessfi.xyz`. It presents the people and work of the ecosystem:
+builders, their projects and products, and development teams.
 
-**Key Features:**
+This app **only displays** data. Creating, editing, and uploading builders,
+projects, and teams all happen in the main Boundless app
+([boundlessfi.xyz](https://boundlessfi.xyz)). This showcase reads that data and
+renders it, so expect mostly read (`GET`) flows and no creation forms here.
 
-- 🎯 Multiple bounty claiming models
-- ⚡ Credit-based application system
-- 🔐 Passkey wallet integration
-- 💰 Smart contract escrow
-- 📊 On-chain reputation system
+> This repository replaces the previous `bounties` app. The prior codebase is
+> preserved in full under [`archive/`](./archive) for reference.
 
----
+## Tech stack
 
-## Tech Stack
+| Concern | Choice |
+| --- | --- |
+| Framework | Next.js 16 (App Router, React Server Components, Turbopack) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 (CSS-first `@theme` tokens, no `tailwind.config.js`) |
+| Components | shadcn/ui (`new-york`), customized to the Boundless design system |
+| Icons | Design-system icon library (`components/icons`) + lucide-react |
+| Theme | Dark by default (next-themes), matching the canonical Boundless theme |
 
-**Blockchain:**
+## Design system
 
-- Stellar Network
-- Soroban Smart Contracts
-- [smart-account-kit](https://github.com/kalepail/smart-account-kit) for passkey wallets
+The look and feel is lifted directly from the main
+[boundless-platform](https://boundlessfi.xyz) frontend so this app is visually
+native to Boundless. The full reference lives in **[design.md](./design.md)**:
+color scales, semantic tokens, typography, spacing, component patterns, and code
+style.
 
-**Frontend:**
+**If you are contributing UI, read [design.md](./design.md) first and follow it
+strictly.** When something is missing, port it from boundless-platform rather
+than inventing it.
 
-- React/Next.js
-- TailwindCSS
-- Stellar SDK
+## Project structure
 
-**Backend:**
-
-- Node.js/Express
-- PostgreSQL
-- Redis (caching)
-- **GraphQL Subscriptions** via `graphql-ws` (replaces Socket.IO for real-time sync)
-
-**Integrations:**
-
-- GitHub OAuth
-- KYC providers
-- Payment processors
-
----
-
-## Getting Started
-
-### Prerequisites
-
-```bash
-node >= 18.0.0
-npm >= 9.0.0
+```
+app/                  # routes (thin components that compose features)
+  layout.tsx          # root layout: fonts + provider tree
+  page.tsx            # landing page (nav + hero + footer)
+  globals.css         # Tailwind v4 @theme tokens (identical to boundless-platform)
+components/
+  ui/                 # shadcn primitives, themed to the design system
+  layout/             # site header, footer, logo, brand glyphs
+  marketing/          # reusable sections and backgrounds (hero gradient, etc.)
+  cards/              # project / opportunity display cards
+  icons/              # design-system icon library (Linear + Bold)
+config/               # marketing-nav (header/footer/social links)
+lib/                  # cn() and small helpers
+providers/            # theme provider tree (dark default)
+public/               # brand assets, logos, currency, illustrations
+archive/              # the previous bounties app, kept for reference
 ```
 
-### Installation
+## Getting started
+
+Requires Node `>=20.19` (Next 16). Install and run:
 
 ```bash
-# Clone repository
-git clone https://github.com/boundlessfi/bounties.git
-cd bounty
-
-# Install dependencies
 npm install
-
-# Set up environment variables
-cp .env.example .env
-
-# Run development server
 npm run dev
 ```
 
----
+Open [http://localhost:3000](http://localhost:3000).
 
-All bounty budgets are locked in Soroban smart contracts until work is approved.
+## Scripts
 
----
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the dev server (Turbopack) |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | Run ESLint |
 
-## Development
-
-### Running Tests
-
-```bash
-# Unit tests
-npm test
-
-# Integration tests
-npm run test:integration
-
-# Smart contract tests
-npm run test:contracts
-```
-
-### Building
+Before opening a PR, run the full local check:
 
 ```bash
-# Production build
-npm run build
+npm run lint && npm run build
 ```
-
-### Code Style
-
-We use ESLint and Prettier:
-
-```bash
-npm run lint
-npm run format
-```
-
----
 
 ## Contributing
 
-We welcome contributions! Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+This project is open source and welcomes contributions. **Read
+[CONTRIBUTING.md](./CONTRIBUTING.md) before your first pull request.** It is the
+contributor guide, and it covers the rules that keep this app consistent:
 
-### Areas for Contribution
-
-- Frontend components and UI/UX improvements
-- API endpoints and services
-- Documentation
-- Testing and QA
-- Bug fixes and security patches
-
-### Development Workflow
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
----
-
-## API Endpoints
-
-### Bounties
-
-```
-GET    /api/bounties              # List all bounties
-GET    /api/bounties/:id          # Get bounty details
-POST   /api/bounties              # Create bounty (auth required)
-PUT    /api/bounties/:id          # Update bounty (auth required)
-DELETE /api/bounties/:id          # Delete bounty (auth required)
-```
-
-### Applications
-
-```
-GET    /api/applications          # List applications
-POST   /api/applications          # Submit application (auth required)
-PUT    /api/applications/:id      # Update application (auth required)
-```
-
-### Users
-
-```
-GET    /api/users/:id             # Get user profile
-PUT    /api/users/:id             # Update profile (auth required)
-GET    /api/users/:id/reputation  # Get reputation score
-```
-
----
-
-## Security
-
-### Reporting Vulnerabilities
-
-Please report security vulnerabilities to <security@boundlessfi.xyz>. Do not open public issues for security concerns.
-
-### Security Features
-
-- Passkey authentication (WebAuthn)
-- Smart contract escrow
-- Rate limiting on API endpoints
-- Input validation and sanitization
-- CORS protection
-- SQL injection prevention
-
----
-
-## Deployment
-
----
-
-## Testing
-
-### Frontend Testing
-
-```bash
-cd frontend
-npm run test
-npm run test:e2e
-```
-
-### Backend Testing
-
----
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
-
----
-
-## Resources
-
-- **Documentation**: [docs/](./docs)
-- **API Reference**: [docs/API.md](./docs/API.md)
-- **Smart Contract Docs**: [docs/CONTRACTS.md](./docs/CONTRACTS.md)
-- **Stellar Docs**: [stellar.org/docs](https://stellar.org/docs)
-- **Soroban Docs**: [soroban.stellar.org](https://soroban.stellar.org)
-
----
-
-## Support
-
-- **Issues**: [GitHub Issues](https://github.com/boundlessfi/bounty/issues)
-- **Discord**: [Join our server](https://discord.gg/boundless)
-- **Email**: <dev@boundlessfi.xyz>
-
----
-
-## Schema sync (CI)
-
-This repository validates that the local `lib/graphql/schema.graphql` is kept in sync with the canonical GraphQL schema that lives in the backend repository.
-
-- The GitHub Actions workflow `.github/workflows/check-schema.yml` runs `node ./scripts/sync-schema.js --check` on push and pull requests.
-- If the canonical schema is stored in the private backend repo `boundlessfi/boundless-nestjs`, the workflow can check out that repo when you provide a repository PAT in the `BOUNDLESS_NESTJS_TOKEN` secret.
-
-How to enable CI checks for a private backend repo:
-
-1. Create a GitHub Personal Access Token (PAT) with `repo` (read) scope for `boundlessfi/boundless-nestjs`.
-2. In this repository, go to **Settings → Secrets → Actions** and add a new secret named `BOUNDLESS_NESTJS_TOKEN` with the PAT value.
-3. The workflow will automatically checkout `boundlessfi/boundless-nestjs` into the `boundless-nestjs` path and the sync script will copy `src/schema.gql` from there.
-
-If you do not want to provide cross-repo access, two alternatives are supported:
-
-- Set the `CANONICAL_SCHEMA` environment variable (or repository secret) to a path or URL where the canonical `schema.gql` can be found, or
-- Keep a copied `lib/graphql/schema.graphql` file in this repo and update it manually when the backend schema changes.
-
-Local commands:
-
-```bash
-# copy the canonical schema into this repo (useful for local development)
-npm run sync-schema
-
-# CI-friendly check (fails if out-of-sync)
-npm run check-schema
-```
-
-## Acknowledgments
-
-Built with:
-
-- [Stellar](https://stellar.org)
-- [Soroban](https://soroban.stellar.org)
-- [smart-account-kit](https://github.com/kalepail/smart-account-kit)
-
----
-
-<div align="center">
-
-**Built on Stellar**
-
-[Website](https://boundlessfi.xyz) • [Platform](https://bounty.boundlessfi.xyz) • [Discord](https://discord.gg/5Xpwrt9Q)
-
-</div>
+- Follow the design system in [design.md](./design.md). Build UI from the
+  primitives in `components/ui` and the tokens in `globals.css`.
+- Reuse existing components before building new ones. When something is missing,
+  port it from boundless-platform rather than inventing it.
+- Keep this app display-only. Data creation belongs in the main Boundless app.
+- No em dashes in code, comments, or copy (house style).
+- Attach a UI screenshot on any frontend change so reviewers can see the result.

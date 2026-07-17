@@ -1,65 +1,177 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
+import { cva, type VariantProps } from 'class-variance-authority';
+import { Loader2 } from 'lucide-react';
+import { Slot } from 'radix-ui';
+import * as React from 'react';
 
-import { cn } from "@/lib/utils"
+import { cn } from '@/lib/utils';
 
+/**
+ * Boundless button system. Compose the look from independent axes:
+ * `intent` (primary | secondary | white | destructive), `appearance`
+ * (solid | outline | text), `size` (small | large), and `shape`
+ * (rounded | pill). Pass `iconOnly` for square icon buttons and `loading`
+ * for the spinner state.
+ */
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  'relative inline-flex shrink-0 cursor-pointer items-center justify-center gap-2 font-medium whitespace-nowrap transition-colors outline-none focus-visible:ring-2 disabled:pointer-events-none disabled:cursor-not-allowed [&_svg]:pointer-events-none [&_svg]:shrink-0',
   {
     variants: {
-      variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/90",
-        destructive:
-          "bg-destructive text-white hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
-        outline:
-          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
-        secondary:
-          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-        ghost:
-          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
-        link: "text-primary underline-offset-4 hover:underline",
+      intent: {
+        primary: '',
+        secondary: '',
+        white: '',
+        destructive: '',
+      },
+      appearance: {
+        solid: '',
+        outline: 'border bg-transparent',
+        text: 'bg-transparent',
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        icon: "size-9",
-        "icon-sm": "size-8",
-        "icon-lg": "size-10",
+        small: "h-10 px-4 text-sm [&_svg:not([class*='size-'])]:size-4",
+        large: "h-12 px-6 text-base [&_svg:not([class*='size-'])]:size-5",
+      },
+      shape: {
+        rounded: 'rounded-lg',
+        pill: 'rounded-full',
       },
     },
+    compoundVariants: [
+      // Solid
+      {
+        intent: 'primary',
+        appearance: 'solid',
+        class:
+          'bg-primary-500 text-ink hover:bg-primary-400 focus-visible:ring-primary-200 active:bg-primary-600 disabled:bg-[#1a2422] disabled:text-[#4a5a57]',
+      },
+      {
+        intent: 'secondary',
+        appearance: 'solid',
+        class:
+          'bg-primary-500 text-ink hover:bg-primary-400 focus-visible:ring-primary-200 active:bg-primary-600 disabled:bg-[#1a2422] disabled:text-[#4a5a57]',
+      },
+      {
+        intent: 'white',
+        appearance: 'solid',
+        class:
+          'bg-white text-ink hover:bg-white/90 focus-visible:ring-white/25 active:bg-white disabled:bg-white/40 disabled:text-neutral-500/60',
+      },
+      {
+        intent: 'destructive',
+        appearance: 'solid',
+        class:
+          'bg-error-500 text-white hover:bg-error-400 focus-visible:ring-error-300/40 active:bg-error-600 disabled:bg-[#1a2422] disabled:text-[#4a5a57]',
+      },
+      // Outline
+      {
+        intent: 'primary',
+        appearance: 'outline',
+        class:
+          'border-primary-500/60 text-primary-500 hover:border-primary-400/80 hover:bg-primary-500/8 hover:text-primary-400 focus-visible:border-primary-500 focus-visible:ring-primary-300/25 active:border-primary-600/90 active:bg-primary-500/12 disabled:border-neutral-500/30 disabled:text-neutral-500/40',
+      },
+      {
+        intent: 'secondary',
+        appearance: 'outline',
+        class:
+          'border-foreground/20 text-foreground/90 hover:border-foreground/35 hover:bg-foreground/6 hover:text-foreground focus-visible:border-foreground/60 focus-visible:ring-foreground/20 active:border-foreground/45 active:bg-foreground/10 disabled:border-neutral-500/30 disabled:text-neutral-500/40 aria-pressed:border-foreground/60 aria-pressed:bg-foreground/12 aria-pressed:text-foreground',
+      },
+      {
+        intent: 'white',
+        appearance: 'outline',
+        class:
+          'border-white/40 text-white/90 hover:border-white/60 hover:bg-white/8 hover:text-white focus-visible:ring-white/25 active:border-white/80 active:bg-white/12 disabled:border-white/40 disabled:text-white/40',
+      },
+      {
+        intent: 'destructive',
+        appearance: 'outline',
+        class:
+          'border-error-500/70 text-error-500 hover:border-error-400/85 hover:bg-error-500/8 focus-visible:border-error-500 focus-visible:ring-error-500/25 active:border-error-600/90 active:bg-error-500/12 disabled:border-error-500/40 disabled:text-error-500/50',
+      },
+      // Text
+      {
+        intent: 'primary',
+        appearance: 'text',
+        class:
+          'text-primary-500 hover:bg-primary-500/8 hover:text-primary-400 focus-visible:ring-primary-300/25 active:text-primary-600 disabled:text-neutral-500/40',
+      },
+      {
+        intent: 'secondary',
+        appearance: 'text',
+        class:
+          'text-foreground/90 hover:bg-foreground/6 hover:text-foreground focus-visible:ring-foreground/20 active:text-foreground disabled:text-neutral-500/40',
+      },
+      {
+        intent: 'white',
+        appearance: 'text',
+        class:
+          'text-white/90 hover:bg-white/8 hover:text-white focus-visible:ring-white/25 active:text-white/80 disabled:text-white/40',
+      },
+      {
+        intent: 'destructive',
+        appearance: 'text',
+        class:
+          'text-error-500 hover:bg-error-500/8 hover:text-error-400 focus-visible:ring-error-300/25 active:text-error-600 disabled:text-error-500/50',
+      },
+    ],
     defaultVariants: {
-      variant: "default",
-      size: "default",
+      intent: 'primary',
+      appearance: 'solid',
+      size: 'large',
+      shape: 'rounded',
     },
   }
-)
+);
 
-export type ButtonProps = React.ComponentProps<"button"> &
+type ButtonProps = React.ComponentProps<'button'> &
   VariantProps<typeof buttonVariants> & {
-    asChild?: boolean
-  }
+    asChild?: boolean;
+    /** Square icon-only button (width tracks height). */
+    iconOnly?: boolean;
+    /** Show a spinner and block interaction. */
+    loading?: boolean;
+  };
 
 function Button({
   className,
-  variant = "default",
-  size = "default",
+  intent,
+  appearance,
+  size,
+  shape,
   asChild = false,
+  iconOnly = false,
+  loading = false,
+  disabled,
+  children,
   ...props
 }: ButtonProps) {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot.Root : 'button';
 
   return (
     <Comp
-      data-slot="button"
-      data-variant={variant}
+      data-slot='button'
+      data-intent={intent}
+      data-appearance={appearance}
       data-size={size}
-      className={cn(buttonVariants({ variant, size, className }))}
+      data-shape={shape}
+      data-loading={loading || undefined}
+      className={cn(
+        buttonVariants({ intent, appearance, size, shape }),
+        iconOnly && 'aspect-square px-0',
+        className
+      )}
+      disabled={disabled || loading}
       {...props}
-    />
-  )
+    >
+      {asChild ? (
+        children
+      ) : (
+        <>
+          {loading ? <Loader2 className='animate-spin' aria-hidden /> : null}
+          {children}
+        </>
+      )}
+    </Comp>
+  );
 }
 
-export { Button, buttonVariants }
-
+export { Button, buttonVariants };

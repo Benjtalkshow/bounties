@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-298" y="-1085" width="5902" height="3379" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3132" transform="translate(-298 -838)" fill="white"/>
+<g id="Group 268">
+<g id="Arrows">
+<rect x="-64" y="-384" width="1000" height="644" rx="24" fill="white"/>
+<g id="icon / arrow-right">
+<path id="icon" d="M21.7071 12.7071C22.0976 12.3166 22.0976 11.6834 21.7071 11.2929L17.7071 7.29289C17.3166 6.90237 16.6834 6.90237 16.2929 7.29289C15.9024 7.68342 15.9024 8.31658 16.2929 8.70711L18.5858 11L3 11C2.44772 11 2 11.4477 2 12C2 12.5523 2.44772 13 3 13L18.5858 13L16.2929 15.2929C15.9024 15.6834 15.9024 16.3166 16.2929 16.7071C16.6834 17.0976 17.3166 17.0976 17.7071 16.7071L21.7071 12.7071Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

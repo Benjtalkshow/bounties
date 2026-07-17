@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-486.5" y="-1133" width="5902" height="3311" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3064" transform="translate(-486.5 -886)" fill="white"/>
+<g id="Container_2">
+<g id="Arrows">
+<rect x="-288" y="-384" width="1000" height="644" rx="24" fill="white"/>
+<g id="icon / chevron-up">
+<path id="icon" fill-rule="evenodd" clip-rule="evenodd" d="M5 2C3.34315 2 2 3.34315 2 5V19C2 20.6569 3.34315 22 5 22H19C20.6569 22 22 20.6569 22 19V5C22 3.34315 20.6569 2 19 2H5ZM10.6984 8.29856C11.4474 7.65658 12.5526 7.65658 13.3016 8.29856L19.6508 13.7407C20.0701 14.1002 20.1187 14.7315 19.7593 15.1508C19.3998 15.5701 18.7685 15.6187 18.3492 15.2593L12 9.81708L5.65079 15.2593C5.23147 15.6187 4.60017 15.5701 4.24074 15.1508C3.88132 14.7315 3.92988 14.1002 4.34921 13.7407L10.6984 8.29856Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

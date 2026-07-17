@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-1394.5" y="-599" width="5902" height="3311" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3064" transform="translate(-1394.5 -352)" fill="white"/>
+<g id="Container_2">
+<g id="Devices">
+<rect x="-64" y="-288" width="1000" height="548" rx="24" fill="white"/>
+<g id="icon / battery-empty">
+<path id="icon" d="M6 6H16.4571C18.114 6 19.4571 7.34315 19.4571 9C20.8615 9 22 10.1385 22 11.5429V12.4571C22 13.8615 20.8615 15 19.4571 15C19.4571 16.6569 18.114 18 16.4571 18H6C4.34314 18 3 16.6569 3 15V9C3 7.34315 4.34315 6 6 6Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

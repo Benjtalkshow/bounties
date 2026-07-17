@@ -1,66 +1,55 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import * as TabsPrimitive from "@radix-ui/react-tabs"
+import { cn } from '@/lib/utils';
 
-import { cn } from "@/lib/utils"
-
-function Tabs({
-  className,
-  ...props
-}: React.ComponentProps<typeof TabsPrimitive.Root>) {
-  return (
-    <TabsPrimitive.Root
-      data-slot="tabs"
-      className={cn("flex flex-col gap-2", className)}
-      {...props}
-    />
-  )
+export interface TabItem {
+  /** Stable identifier emitted through `onValueChange`. */
+  value: string;
+  /** Visible label. */
+  label: string;
 }
 
-function TabsList({
-  className,
-  ...props
-}: React.ComponentProps<typeof TabsPrimitive.List>) {
+interface TabsProps {
+  items: TabItem[];
+  value: string;
+  onValueChange: (value: string) => void;
+  className?: string;
+}
+
+/**
+ * Horizontal filter tabs: the active item shows as a solid pill, the rest as
+ * plain text links. Scrolls horizontally on narrow viewports.
+ */
+export function Tabs({ items, value, onValueChange, className }: TabsProps) {
   return (
-    <TabsPrimitive.List
-      data-slot="tabs-list"
+    <div
+      role='tablist'
       className={cn(
-        "bg-muted text-muted-foreground inline-flex h-9 w-fit items-center justify-center rounded-lg p-[3px]",
+        'scrollbar-hide flex items-center gap-6 overflow-x-auto lg:gap-10',
         className
       )}
-      {...props}
-    />
-  )
-}
+    >
+      {items.map(item => {
+        const active = item.value === value;
 
-function TabsTrigger({
-  className,
-  ...props
-}: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
-  return (
-    <TabsPrimitive.Trigger
-      data-slot="tabs-trigger"
-      className={cn(
-        "data-[state=active]:bg-background dark:data-[state=active]:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:outline-ring dark:data-[state=active]:border-input dark:data-[state=active]:bg-input/30 text-foreground dark:text-muted-foreground inline-flex h-[calc(100%-1px)] flex-1 items-center justify-center gap-1.5 rounded-md border border-transparent px-2 py-1 text-sm font-medium whitespace-nowrap transition-[color,box-shadow] focus-visible:ring-[3px] focus-visible:outline-1 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:shadow-sm [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className
-      )}
-      {...props}
-    />
-  )
+        return (
+          <button
+            key={item.value}
+            type='button'
+            role='tab'
+            aria-selected={active}
+            onClick={() => onValueChange(item.value)}
+            className={cn(
+              'shrink-0 rounded-full whitespace-nowrap transition-colors',
+              active
+                ? 'bg-white px-5 py-2 text-xs font-semibold tracking-[0.5px] text-[#1c1e13]'
+                : 'text-sm font-medium tracking-[0.1px] text-primary-50/90 hover:text-white'
+            )}
+          >
+            {item.label}
+          </button>
+        );
+      })}
+    </div>
+  );
 }
-
-function TabsContent({
-  className,
-  ...props
-}: React.ComponentProps<typeof TabsPrimitive.Content>) {
-  return (
-    <TabsPrimitive.Content
-      data-slot="tabs-content"
-      className={cn("flex-1 outline-none", className)}
-      {...props}
-    />
-  )
-}
-
-export { Tabs, TabsList, TabsTrigger, TabsContent }

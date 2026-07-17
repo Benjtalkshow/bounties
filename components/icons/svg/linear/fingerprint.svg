@@ -1,0 +1,23 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-3867.5" y="-474" width="5902" height="3379" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3132" transform="translate(-3867.5 -227)" fill="white"/>
+<g id="Group 268">
+<g id="Security">
+<rect x="-288" y="-146" width="1000" height="310" rx="24" fill="white"/>
+<g id="icon / fingerprint">
+<path id="icon" d="M2 17.2V12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12V21" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="icon_2" d="M5 18.7143V17V11.6933C5 11.0461 5.11863 10.4044 5.35 9.8M19 11.8571C19 9.8091 18.0834 7.97076 16.6302 6.71429C15.3962 5.64738 13.7753 5 12 5C9.91335 5 8.03994 5.89438 6.75748 7.31316" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="icon_3" d="M8 13V12C8 9.79086 9.79086 8 12 8C14.2091 8 16 9.79086 16 12" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="icon_4" d="M12 12V13C12 14.1046 12.8954 15 14 15C15.1046 15 16 14.1046 16 13V12" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="icon_5" d="M8 12.4V12.5C8 15.5376 10.4624 18 13.5 18C16.5376 18 19 15.5376 19 12.5V12" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="icon_6" d="M17.3337 20C16.3234 20.6468 15.1224 21.0218 13.8337 21.0218C13.197 21.0218 12.5816 20.9292 12 20.7568" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="icon_7" d="M8 19V20" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

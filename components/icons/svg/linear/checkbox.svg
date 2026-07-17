@@ -1,0 +1,17 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="24" height="24" fill="#1E1E1E"/>
+<g id="Iconography">
+<rect x="-1421.5" y="-1453" width="5902" height="3379" rx="8" fill="white"/>
+<g id="Container">
+<rect width="5902" height="3132" transform="translate(-1421.5 -1206)" fill="white"/>
+<g id="Group 268">
+<g id="Essentials">
+<rect x="-64" y="-480" width="1000" height="980" rx="24" fill="white"/>
+<g id="icon / checkbox">
+<path id="icon" fill-rule="evenodd" clip-rule="evenodd" d="M7 3C4.79086 3 3 4.79086 3 7V17C3 19.2091 4.79086 21 7 21H17C19.2091 21 21 19.2091 21 17V7C21 4.79086 19.2091 3 17 3H7ZM5 7C5 5.89543 5.89543 5 7 5H17C18.1046 5 19 5.89543 19 7V17C19 18.1046 18.1046 19 17 19H7C5.89543 19 5 18.1046 5 17V7Z" fill="black"/>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>
