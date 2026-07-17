@@ -11,9 +11,11 @@ export default function Home() {
 
       <HeroBackground fieldHeight={640} fadeBottom>
         <Section className='py-24 text-center lg:py-32'>
-          <span className='text-caption-sm text-primary-500 uppercase'>
-            Boundless Builders
-          </span>
+          <div className='inline-flex items-center rounded-full border border-white/10 bg-white/5 p-1 text-body-xs text-white/70'>
+            <span className='rounded-full bg-white/10 px-3 py-1 font-medium text-white'>
+              Boundless Builders
+            </span>
+          </div>
           <h1 className='mt-6 text-display-sm text-foreground lg:text-display-lg'>
             Discover the builders shipping on{' '}
             <span className='text-primary-500'>Stellar</span>
