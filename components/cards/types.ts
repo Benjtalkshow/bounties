@@ -12,6 +12,28 @@ export type OpportunityCardStatus =
   | 'review'
   | 'completed';
 
+export interface BuilderCardView {
+  id: string;
+  /** The builder's display name (e.g. "Jane Doe"). */
+  displayName: string;
+  /** URL-safe username (e.g. "janedoe"). */
+  username: string;
+  /** Optional avatar image URL. */
+  avatarSrc?: string;
+  /** Professional role or title (e.g. "Full-stack developer"). */
+  role?: string;
+  /** Country or city label (e.g. "Nigeria"). */
+  location?: string;
+  /** Up to 3-4 skill labels. */
+  skills?: string[];
+  /** Follower count when available. */
+  followers?: number;
+  /** Project count when available. */
+  projects?: number;
+  /** Profile page path so cards can link out. */
+  detailUrl: string;
+}
+
 export interface OpportunityCardView {
   id: string;
   org: string;
