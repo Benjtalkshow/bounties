@@ -65,11 +65,6 @@ export function toProjectCard(
     participants: project.teamMembers.length + 1,
     mode: project.originType ? ORIGIN_LABEL[project.originType] : '',
     comments: project._count.comments,
-    endsIn: '',
-    reward: {
-      amount: 0,
-      currency: '',
-    },
     detailUrl: `/projects/${project.slug ?? project.id}`,
     isFeatured: project.isFeatured,
   };
