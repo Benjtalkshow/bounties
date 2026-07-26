@@ -46,9 +46,9 @@ export interface OpportunityCardView {
   /** Sub-mode label or pillar name. Empty string when nothing better is available. */
   mode: string;
   comments: number;
-  /** Pre-formatted countdown like `4D:22H:49M`, or an empty string when no deadline. */
-  endsIn: string;
-  reward: { amount: number; currency: string };
+  /** Pre-formatted countdown like `4D:22H:49M` when a deadline is available. */
+  endsIn?: string;
+  reward?: { amount: number; currency: string };
   /** Detail page path so cards can link out. */
   detailUrl: string;
   isFeatured: boolean;
