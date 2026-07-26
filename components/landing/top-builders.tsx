@@ -52,7 +52,6 @@ export function TopBuilders() {
   return (
     <Section innerClassName='flex flex-col gap-8'>
       <SectionHeading
-        eyebrow='Leaderboard'
         title='Top builders'
         description='Meet the builders making an impact across the Boundless ecosystem.'
       />
