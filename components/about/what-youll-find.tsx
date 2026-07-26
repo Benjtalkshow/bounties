@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import type { ComponentType, SVGProps } from 'react';
 
-import { BoxIcon, CodeIcon, UsersIcon } from '@/components/icons';
+import { BoxIcon, UserGroupIcon, UsersIcon } from '@/components/icons';
 import { Section, SectionHeading } from '@/components/marketing/section';
 import { cn } from '@/lib/utils';
 
@@ -16,7 +16,7 @@ type Pillar = {
 
 const PILLARS: Pillar[] = [
   {
-    icon: CodeIcon,
+    icon: UsersIcon,
     title: 'Builders',
     description:
       "Developers, designers, and product leaders from across the network, each with a profile of what they've shipped.",
@@ -30,7 +30,7 @@ const PILLARS: Pillar[] = [
     href: '/projects',
   },
   {
-    icon: UsersIcon,
+    icon: UserGroupIcon,
     title: 'Teams',
     description:
       'The organizations turning ideas into shipped work, and the people who make them up.',
