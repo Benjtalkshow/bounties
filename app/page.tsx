@@ -1,7 +1,14 @@
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
+import {
+  FeaturedProjects,
+  StatsStrip,
+  TopBuilders,
+  WantToBuild,
+} from '@/components/landing';
 import { Button } from '@/components/ui/button';
 import { HeroBackground } from '@/components/marketing/hero-background';
+import { Reveal } from '@/components/marketing/reveal';
 import { Section } from '@/components/marketing/section';
 
 export default function Home() {
@@ -33,6 +40,22 @@ export default function Home() {
           </div>
         </Section>
       </HeroBackground>
+
+      <Reveal>
+        <StatsStrip />
+      </Reveal>
+
+      <Reveal>
+        <TopBuilders />
+      </Reveal>
+
+      <Reveal>
+        <FeaturedProjects />
+      </Reveal>
+
+      <Reveal>
+        <WantToBuild />
+      </Reveal>
 
       <SiteFooter />
     </>
