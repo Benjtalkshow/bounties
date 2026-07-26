@@ -4,6 +4,8 @@ import { Button } from '@/components/ui/button';
 import { HeroBackground } from '@/components/marketing/hero-background';
 import { Section } from '@/components/marketing/section';
 
+import { WantToBuild } from '@/components/landing/want-to-build';
+
 export default function Home() {
   return (
     <>
@@ -33,6 +35,8 @@ export default function Home() {
           </div>
         </Section>
       </HeroBackground>
+
+      <WantToBuild />
 
       <SiteFooter />
     </>
