@@ -8,7 +8,7 @@ export function WantToBuild() {
       action={{
         label: 'Get started on Boundless',
         href:
-          process.env.NEXT_PUBLIC_BOUNDLESS_APP_URL ??
+          process.env.NEXT_PUBLIC_BOUNDLESS_APP_URL?.trim() ||
           'https://boundlessfi.xyz',
         external: true,
       }}
