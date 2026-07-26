@@ -5,6 +5,18 @@
  * for single reads.
  */
 
+import type { components, paths } from './generated/schema';
+
+export type { components, paths };
+
+/**
+ * Every named schema (DTO) from the backend OpenAPI document. Derive resource
+ * types from here rather than hand-writing them, e.g.
+ * `type BuilderListItem = Schemas['UserDirectoryItemDto']`. Regenerate with
+ * `npm run codegen` (live backend) or `npm run codegen:snapshot` (committed doc).
+ */
+export type Schemas = components['schemas'];
+
 export interface PaginationMeta {
   page: number;
   limit: number;
