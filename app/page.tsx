@@ -50,7 +50,10 @@ export default function Home() {
       <Reveal>
         <FeaturedProjects />
       </Reveal>
-      <Reveal>
+      {/* y=0: the CTA Section has a full-width background gradient, so a
+          translateY reveal would shift the whole background and leave a gap
+          above it until the animation settles. Fade in place instead. */}
+      <Reveal y={0}>
         <WantToBuild />
       </Reveal>
 
