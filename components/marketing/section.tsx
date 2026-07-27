@@ -34,16 +34,14 @@ export function Eyebrow({
   children: React.ReactNode;
 }) {
   return (
-    <div
+    <span
       className={cn(
-        'inline-flex items-center rounded-full border border-white/10 bg-white/5 p-1 text-body-xs text-white/70',
+        'inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-white/70',
         className
       )}
     >
-      <span className='rounded-full bg-white/10 px-3 py-1 text-body-xs font-medium text-white'>
-        {children}
-      </span>
-    </div>
+      {children}
+    </span>
   );
 }
 
@@ -55,7 +53,6 @@ export function SectionHeading({
   align = 'center',
   className,
   titleClassName,
-  descriptionClassName,
 }: {
   eyebrow?: React.ReactNode;
   title: React.ReactNode;
@@ -63,9 +60,9 @@ export function SectionHeading({
   align?: 'center' | 'left';
   className?: string;
   titleClassName?: string;
-  descriptionClassName?: string;
 }) {
-  // 8pt grid: label down 24px (mt-6) to heading, heading down 24px (mt-6) to subheading.
+  // 8pt grid: label down 8px to heading, heading down 12px (16px desktop)
+  // to subheading. Content below the block sits 32px lower (mt-8 by callers).
   return (
     <div
       className={cn(
@@ -76,16 +73,10 @@ export function SectionHeading({
         className
       )}
     >
-      {eyebrow ? (
-        typeof eyebrow === 'string' ? (
-          <Eyebrow>{eyebrow}</Eyebrow>
-        ) : (
-          eyebrow
-        )
-      ) : null}
+      {eyebrow ? <Eyebrow className='mb-2'>{eyebrow}</Eyebrow> : null}
       <h2
         className={cn(
-          'mt-6 font-heading text-3xl font-bold tracking-tight text-balance text-white sm:text-4xl',
+          'font-heading text-3xl font-bold tracking-tight text-balance text-white sm:text-4xl',
           titleClassName
         )}
       >
@@ -94,9 +85,8 @@ export function SectionHeading({
       {description ? (
         <p
           className={cn(
-            'mt-6 max-w-2xl text-body-lg text-muted-foreground',
-            align === 'center' && 'mx-auto',
-            descriptionClassName
+            'mt-3 max-w-2xl text-pretty text-white/60 lg:mt-4',
+            align === 'center' && 'mx-auto'
           )}
         >
           {description}
