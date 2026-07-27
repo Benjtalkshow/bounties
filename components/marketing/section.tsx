@@ -1,26 +1,54 @@
 import { cn } from '@/lib/utils';
 
+import { Reveal } from './reveal';
+
 /** Centered max-width container with vertical rhythm for a marketing section. */
 export function Section({
   id,
   className,
   innerClassName,
+  reveal = false,
+  revealFrom = 'up',
   children,
 }: {
   id?: string;
   className?: string;
   innerClassName?: string;
+  /**
+   * Animate the inner content column in on scroll (fade + slide). The animation
+   * lives on the centered content, not the full-width `<section>`, so the
+   * background stays put and no empty gap appears above the section. Honors
+   * reduced motion.
+   */
+  reveal?: boolean;
+  /** Which edge the content slides in from when `reveal` is set. */
+  revealFrom?: 'left' | 'right' | 'up';
   children: React.ReactNode;
 }) {
   // 8pt grid: 64px/20px vertical/horizontal on mobile, 80px/100px on desktop.
+  const innerClass = cn('mx-auto w-full max-w-page', innerClassName);
+  const offset =
+    revealFrom === 'up'
+      ? { x: 0, y: 48 }
+      : { x: revealFrom === 'right' ? 64 : -64, y: 0 };
+
   return (
     <section
       id={id}
-      className={cn('px-5 py-16 lg:px-[100px] lg:py-20', className)}
+      // Clip a horizontal slide so it never spills into a page scrollbar.
+      className={cn(
+        'px-5 py-16 lg:px-[100px] lg:py-20',
+        reveal && 'overflow-x-clip',
+        className
+      )}
     >
-      <div className={cn('mx-auto w-full max-w-page', innerClassName)}>
-        {children}
-      </div>
+      {reveal ? (
+        <Reveal className={innerClass} x={offset.x} y={offset.y} duration={2.1}>
+          {children}
+        </Reveal>
+      ) : (
+        <div className={innerClass}>{children}</div>
+      )}
     </section>
   );
 }

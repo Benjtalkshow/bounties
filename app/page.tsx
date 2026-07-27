@@ -7,7 +7,6 @@ import {
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
 import { HeroBackground } from '@/components/marketing/hero-background';
-import { Reveal } from '@/components/marketing/reveal';
 import { Section } from '@/components/marketing/section';
 import { Button } from '@/components/ui/button';
 
@@ -16,7 +15,7 @@ export default function Home() {
     <>
       <SiteHeader />
 
-      <HeroBackground fieldHeight={640} fadeBottom>
+      <HeroBackground fieldHeight={640}>
         <Section className='py-24 text-center lg:py-32'>
           <div className='inline-flex items-center rounded-full border border-white/10 bg-white/5 p-1 text-body-xs text-white/70'>
             <span className='rounded-full bg-white/10 px-3 py-1 font-medium text-white'>
@@ -41,18 +40,10 @@ export default function Home() {
         </Section>
       </HeroBackground>
 
-      <Reveal>
-        <StatsStrip />
-      </Reveal>
-      <Reveal>
-        <TopBuilders />
-      </Reveal>
-      <Reveal>
-        <FeaturedProjects />
-      </Reveal>
-      <Reveal>
-        <WantToBuild />
-      </Reveal>
+      <StatsStrip />
+      <TopBuilders />
+      <FeaturedProjects />
+      <WantToBuild />
 
       <SiteFooter />
     </>

@@ -50,10 +50,12 @@ export function TopBuilders() {
   const builders = data?.entries.map(toBuilderCard) ?? [];
 
   return (
-    <Section innerClassName='flex flex-col gap-8'>
+    <Section reveal innerClassName='flex flex-col gap-8'>
       <SectionHeading
+        align='left'
         title='Top builders'
         description='Meet the builders making an impact across the Boundless ecosystem.'
+        titleClassName='leading-none font-semibold lg:text-5xl lg:tracking-[-1.92px]'
       />
 
       {isPending ? (

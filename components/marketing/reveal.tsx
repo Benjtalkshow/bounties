@@ -10,17 +10,23 @@ interface RevealProps {
   className?: string;
   /** Seconds to delay the animation; use `index * step` for a stagger. */
   delay?: number;
+  /** Horizontal travel distance in px. */
+  x?: number;
   /** Vertical travel distance in px. */
   y?: number;
+  /** Animation duration in seconds. */
+  duration?: number;
   as?: keyof typeof MOTION;
 }
 
-/** Fades and slides its children up once they scroll into view. */
+/** Fades and slides its children into place once they scroll into view. */
 export function Reveal({
   children,
   className,
   delay = 0,
+  x = 0,
   y = 32,
+  duration = 1.1,
   as = 'div',
 }: RevealProps) {
   const reduceMotion = useReducedMotion();
@@ -34,10 +40,10 @@ export function Reveal({
   return (
     <Tag
       className={className}
-      initial={{ opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, x, y }}
+      whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 1.1, delay, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
     </Tag>

@@ -52,10 +52,16 @@ export function FeaturedProjects() {
   const projects = data?.data.map(toProjectCard) ?? [];
 
   return (
-    <Section innerClassName='flex flex-col gap-8'>
+    <Section
+      reveal
+      className='bg-[linear-gradient(180deg,rgba(13,17,17,0)_50%,rgba(46,237,170,0.08)_100%)]'
+      innerClassName='flex flex-col gap-8'
+    >
       <SectionHeading
+        align='left'
         title='Featured projects'
         description='Explore standout projects being built across the Boundless ecosystem.'
+        titleClassName='leading-none font-semibold lg:text-5xl lg:tracking-[-1.92px]'
       />
 
       {isPending ? (
