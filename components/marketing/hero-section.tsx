@@ -20,6 +20,12 @@ interface HeroSectionProps {
   media?: ReactNode;
   /** Render the framed media card even without `media`. */
   showMedia?: boolean;
+  /**
+   * Resolve the teal tint back to ink at the very bottom so the hero meets the
+   * next section (or the footer) with no seam. Use when the hero sits directly
+   * above the footer.
+   */
+  fadeBottom?: boolean;
   className?: string;
 }
 
@@ -29,6 +35,7 @@ export function HeroSection({
   partners,
   media,
   showMedia = false,
+  fadeBottom = false,
   className,
 }: HeroSectionProps) {
   const hasMedia = media != null || showMedia;
@@ -63,7 +70,7 @@ export function HeroSection({
   }, [children, hasLower]);
 
   return (
-    <HeroBackground fieldHeight={fieldHeight}>
+    <HeroBackground fieldHeight={fieldHeight} fadeBottom={fadeBottom}>
       <Section className={cn('pt-24 pb-16 lg:pt-44 lg:pb-20', className)}>
         {children ? (
           <div ref={contentRef} className='max-w-[772px]'>
