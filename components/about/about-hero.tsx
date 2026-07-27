@@ -8,7 +8,7 @@ import { PartnerLogos } from '@/components/marketing/partner-logos';
  */
 export function AboutHero() {
   return (
-    <HeroSection partners={<PartnerLogos />} fadeBottom className='pt-16 lg:pt-36'>
+    <HeroSection partners={<PartnerLogos />} className='pt-16 lg:pt-36'>
       <h1 className='font-heading text-5xl leading-none font-semibold tracking-tight sm:text-6xl lg:text-[72px] lg:tracking-[-4px]'>
         <span className='text-white'>Meet the People </span>
         <span className='text-primary'>Building the Future</span>
