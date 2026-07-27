@@ -11,7 +11,7 @@ export default function Home() {
     <>
       <SiteHeader />
 
-      <HeroBackground fieldHeight={640} fadeBottom>
+      <HeroBackground fieldHeight={640}>
         <Section className='py-24 text-center lg:py-32'>
           <div className='inline-flex items-center rounded-full border border-white/10 bg-white/5 p-1 text-body-xs text-white/70'>
             <span className='rounded-full bg-white/10 px-3 py-1 font-medium text-white'>
