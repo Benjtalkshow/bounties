@@ -82,7 +82,10 @@ export function StatsStrip() {
   if (items.length === 0) return null;
 
   return (
-    <Section>
+    <Section
+      reveal
+      className='bg-[linear-gradient(180deg,rgba(46,237,170,0.08)_0%,rgba(13,17,17,0)_100%)]'
+    >
       <StatsBar items={items} />
     </Section>
   );

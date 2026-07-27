@@ -45,6 +45,7 @@ export function CtaBand({
 
   return (
     <Section
+      reveal
       className={cn(
         'bg-ink bg-[linear-gradient(180deg,rgba(46,237,170,0.08)_0%,rgba(13,17,17,0)_50%)]',
         className

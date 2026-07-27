@@ -15,6 +15,10 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { headerMenus } from '@/config/marketing-nav';
 
+/** The main Boundless app, where builders sign up and create. Opens in a new tab. */
+const LAUNCH_APP_URL =
+  process.env.NEXT_PUBLIC_BOUNDLESS_APP_URL ?? 'https://boundlessfi.xyz';
+
 type HeaderVariant = 'site' | 'blog';
 
 function NavDivider() {
@@ -178,9 +182,14 @@ function MobileMenu({ onNavigate }: { onNavigate: () => void }) {
           </div>
         ))}
         <PillButton asChild className='w-full'>
-          <Link href='/for-you' onClick={onNavigate}>
+          <a
+            href={LAUNCH_APP_URL}
+            target='_blank'
+            rel='noopener noreferrer'
+            onClick={onNavigate}
+          >
             Launch App
-          </Link>
+          </a>
         </PillButton>
       </div>
     </div>
@@ -214,7 +223,9 @@ export function SiteHeader() {
               <PillButton type='button'>Subscribe</PillButton>
             ) : (
               <PillButton asChild>
-                <Link href='/for-you'>Launch App</Link>
+                <a href={LAUNCH_APP_URL} target='_blank' rel='noopener noreferrer'>
+                  Launch App
+                </a>
               </PillButton>
             )}
           </div>
@@ -230,7 +241,13 @@ export function SiteHeader() {
             ) : (
               <>
                 <PillButton asChild>
-                  <Link href='/for-you'>Launch App</Link>
+                  <a
+                    href={LAUNCH_APP_URL}
+                    target='_blank'
+                    rel='noopener noreferrer'
+                  >
+                    Launch App
+                  </a>
                 </PillButton>
                 <button
                   type='button'
