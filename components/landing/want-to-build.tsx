@@ -1,3 +1,4 @@
+
 import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
@@ -23,6 +24,22 @@ export function WantToBuild() {
       heading='Want to Be a Builder?'
       description='Join the Boundless ecosystem. Create a profile, showcase your work, and discover opportunities to build, earn, and grow.'
       action={{ label: 'Get Started', href: '/opportunities' }}
+
+import { CtaBand } from '@/components/marketing/cta-band';
+
+export function WantToBuild() {
+  return (
+    <CtaBand
+      heading='Want to be a builder?'
+      description='Create your profile, join a team, and start shipping on Boundless. Your work belongs in the showcase.'
+      action={{
+        label: 'Get started on Boundless',
+        href:
+          process.env.NEXT_PUBLIC_BOUNDLESS_APP_URL?.trim() ||
+          'https://boundlessfi.xyz',
+        external: true,
+      }}
+
     />
   );
 }

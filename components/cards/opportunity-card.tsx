@@ -139,29 +139,37 @@ export function OpportunityCard({
           </Meta>
         </div>
 
-        <span aria-hidden className='h-px w-full bg-[#1f2a28]' />
+        {endsIn || reward ? (
+          <>
+            <span aria-hidden className='h-px w-full bg-[#1f2a28]' />
 
-        <div className='flex items-center gap-3'>
-          <span className='flex min-w-0 flex-1 items-center gap-1 text-xs font-medium text-info-500'>
-            <Calendar
-              className='size-4 shrink-0'
-              strokeWidth={1.75}
-              aria-hidden
-            />
-            <span className='truncate'>Ends in {endsIn}</span>
-          </span>
-          <span className='flex shrink-0 items-center gap-2'>
-            <Image
-              src='/currency/usdc.png'
-              alt='Token'
-              width={20}
-              height={20}
-            />
-            <span className='text-xl font-bold tracking-tight whitespace-nowrap text-primary-600'>
-              {reward.amount.toLocaleString()} {reward.currency}
-            </span>
-          </span>
-        </div>
+            <div className='flex items-center gap-3'>
+              {endsIn ? (
+                <span className='flex min-w-0 flex-1 items-center gap-1 text-xs font-medium text-info-500'>
+                  <Calendar
+                    className='size-4 shrink-0'
+                    strokeWidth={1.75}
+                    aria-hidden
+                  />
+                  <span className='truncate'>Ends in {endsIn}</span>
+                </span>
+              ) : null}
+              {reward ? (
+                <span className='ml-auto flex shrink-0 items-center gap-2'>
+                  <Image
+                    src='/currency/usdc.png'
+                    alt='Token'
+                    width={20}
+                    height={20}
+                  />
+                  <span className='text-xl font-bold tracking-tight whitespace-nowrap text-primary-600'>
+                    {reward.amount.toLocaleString()} {reward.currency}
+                  </span>
+                </span>
+              ) : null}
+            </div>
+          </>
+        ) : null}
       </article>
     </Link>
   );
