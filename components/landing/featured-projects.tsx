@@ -14,7 +14,7 @@ import type { Paginated } from '@/lib/api/types';
 import {
   type FeaturedProjectDto,
   toProjectCard,
-} from './to-project-card';
+} from '@/components/discover/to-project-card';
 
 const FEATURED_PROJECTS_SKELETON_COUNT = 3;
 
