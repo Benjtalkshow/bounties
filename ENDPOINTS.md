@@ -39,15 +39,31 @@ truth.
 
 | Endpoint | Purpose | Status |
 | --- | --- | --- |
-| `GET /leaderboard` | Top builders row (`limit`, `page`, `timeframe`, `tier`) | Public |
+| `GET /users/top-builders` | Top builders row. Card-ready. Accepts `limit`. | Public |
 | `GET /projects/featured` | Featured projects row | Public |
 | `GET /discover/landing` | Ecosystem feed / counts | Public |
 | `GET /discover/recent-winners` | Recent winners highlight | Public |
 | `GET /users/directory?limit=N` | Fallback source for a builders strip | Public |
+| `GET /leaderboard` | Ranking + reputation (tier, score, stats). Not card-ready. | Public |
 
-> There is no "featured builders" flag. The landing "top builders" row uses
-> `GET /leaderboard`. A stats strip can derive counts from the `pagination.total`
-> of `GET /users/directory`, `GET /projects`, and `GET /organizations`.
+> **Top builders:** use `GET /users/top-builders`. It returns a flat array of
+> card-ready builders in the standard `{ success, message, data, meta }`
+> envelope, with everything `BuilderCardView` needs:
+>
+> ```json
+> { "id", "name", "username", "image", "role", "location",
+>   "country", "skills": [], "followers": 0, "projects": 0 }
+> ```
+>
+> Map: `name` -> displayName, `image` -> avatarSrc, `location` -> location,
+> `skills`/`followers`/`projects` straight across. Do **not** map `role` (it is
+> the account role, e.g. `"user"`, not a professional title). `GET /leaderboard`
+> is kept for ranking/reputation use only; it does **not** carry profile fields
+> (role, location, followers, projects), which is why the landing top-builders
+> row moved to `GET /users/top-builders`.
+>
+> A stats strip can derive counts from the `pagination.total` of
+> `GET /users/directory`, `GET /projects`, and `GET /organizations`.
 
 ---
 
