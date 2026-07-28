@@ -2,51 +2,31 @@ import type { BuilderCardView } from '@/components/cards/types';
 
 const MAX_SKILLS = 4;
 
-export interface LeaderboardStats {
-  totalCompleted: number;
-  totalWins: number;
-  totalEarnings: number;
-  earningsCurrency: string;
-  totalEarningsUsdc: number;
-  completionRate: number;
-  averageCompletionTime: number;
-  currentStreak: number;
-  longestStreak: number;
-}
-
-export interface LeaderboardContributor {
+/** One row of `GET /users/top-builders`. */
+export interface TopBuilder {
   id: string;
-  userId: string;
+  name: string;
   username: string;
-  displayName: string;
-  avatarUrl: string | null;
-  totalScore: number;
-  tier: string;
-  stats: LeaderboardStats;
-  topTags: string[];
-  lastActiveAt: string;
+  image: string | null;
+  /** Account role ("user"), not a professional title. Not mapped to the card. */
+  role: string;
+  location: string | null;
+  country: string | null;
+  skills: string[];
+  followers: number;
+  projects: number;
 }
 
-export interface LeaderboardEntry {
-  rank: number;
-  contributor: LeaderboardContributor;
-}
-
-export interface LeaderboardData {
-  entries: LeaderboardEntry[];
-  totalCount: number;
-  lastUpdatedAt: string;
-}
-
-export function toBuilderCard({
-  contributor,
-}: LeaderboardEntry): BuilderCardView {
+export function toBuilderCard(builder: TopBuilder): BuilderCardView {
   return {
-    id: contributor.id,
-    displayName: contributor.displayName,
-    username: contributor.username,
-    avatarSrc: contributor.avatarUrl ?? undefined,
-    skills: contributor.topTags.slice(0, MAX_SKILLS),
-    detailUrl: `/builders/${contributor.username}`,
+    id: builder.id,
+    displayName: builder.name,
+    username: builder.username,
+    avatarSrc: builder.image ?? undefined,
+    location: builder.location ?? builder.country ?? undefined,
+    skills: builder.skills.slice(0, MAX_SKILLS),
+    followers: builder.followers,
+    projects: builder.projects,
+    detailUrl: `/builders/${builder.username}`,
   };
 }
