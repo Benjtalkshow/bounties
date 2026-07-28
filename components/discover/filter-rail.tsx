@@ -1,7 +1,6 @@
 'use client';
 
-import { countries } from 'countries-list';
-import { ChevronDown, Layers, MapPin, Search } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import {
   type ComponentType,
@@ -10,72 +9,57 @@ import {
   useState,
 } from 'react';
 
-import { Activity01Icon, Coins02Icon, HashtagIcon } from '@/components/icons';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+  Activity01Icon,
+  CompassIcon,
+  HashtagIcon,
+  Tag02Icon,
+} from '@/components/icons';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Skeleton } from '@/components/ui/skeleton';
 import { transitions } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
-const STATUS = ['Open', 'Applications', 'Review', 'Completed'];
-const MODE = [
-  'All',
-  'Single claim',
-  'Application',
-  'Competition',
-  'Multiple winners',
-];
-const CATEGORY = [
-  'All',
-  'Design',
-  'Development',
-  'Content',
-  'Growth',
-  'Community',
-  'Other',
-];
-const COUNTRY = Object.values(countries)
-  .map(country => country.name)
-  .sort((a, b) => a.localeCompare(b));
+import type { FacetCount } from './use-projects';
+import { useProjectFilters } from './use-projects';
 
-export type CheckboxGroup = 'status' | 'mode' | 'category' | 'country';
+export type CheckboxGroup =
+  | 'category'
+  | 'tags'
+  | 'publicStatus'
+  | 'originType';
 
 export interface FilterValue {
-  status: string[];
-  mode: string[];
   category: string[];
-  country: string[];
-  currency: string;
-  min: string;
-  max: string;
+  tags: string[];
+  publicStatus: string[];
+  originType: string[];
 }
 
 export const EMPTY_FILTERS: FilterValue = {
-  status: [],
-  mode: [],
   category: [],
-  country: [],
-  currency: 'USDC',
-  min: '',
-  max: '',
+  tags: [],
+  publicStatus: [],
+  originType: [],
 };
 
 /** True once the visitor has narrowed the results with any control. */
 export function hasActiveFilters(value: FilterValue): boolean {
   return (
-    value.status.length > 0 ||
-    value.mode.length > 0 ||
     value.category.length > 0 ||
-    value.country.length > 0 ||
-    value.min.trim() !== '' ||
-    value.max.trim() !== ''
+    value.tags.length > 0 ||
+    value.publicStatus.length > 0 ||
+    value.originType.length > 0
   );
+}
+
+/** `IN_DEVELOPMENT` -> `In Development`. */
+function formatLabel(value: string): string {
+  return value
+    .toLowerCase()
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
 }
 
 /** Accepts both lucide icons and our generated SVG icon components. */
@@ -168,10 +152,7 @@ export function FilterRail({
   idPrefix?: string;
   className?: string;
 }) {
-  const [country, setCountry] = useState('');
-  const countries = COUNTRY.filter(name =>
-    name.toLowerCase().includes(country.trim().toLowerCase())
-  );
+  const { data, isPending, isError } = useProjectFilters();
 
   const toggle = (group: CheckboxGroup, item: string) => {
     const current = value[group];
@@ -181,85 +162,62 @@ export function FilterRail({
     onChange({ ...value, [group]: next });
   };
 
-  const renderRows = (group: CheckboxGroup, items: string[]) =>
+  const renderFacetRows = (group: CheckboxGroup, items: FacetCount[]) =>
+    items.map(item => (
+      <CheckRow
+        key={item.value}
+        id={`${idPrefix}-${group}-${item.value}`}
+        label={`${item.value} (${item.count})`}
+        checked={value[group].includes(item.value)}
+        onToggle={() => toggle(group, item.value)}
+      />
+    ));
+
+  const renderEnumRows = (group: CheckboxGroup, items: string[]) =>
     items.map(item => (
       <CheckRow
         key={item}
         id={`${idPrefix}-${group}-${item}`}
-        label={item}
+        label={formatLabel(item)}
         checked={value[group].includes(item)}
         onToggle={() => toggle(group, item)}
       />
     ));
 
+  if (isPending) {
+    return (
+      <div className={cn('flex flex-col gap-3 py-4', className)}>
+        {Array.from({ length: 4 }, (_, index) => (
+          <Skeleton key={index} className='h-4 w-full' />
+        ))}
+      </div>
+    );
+  }
+
+  if (isError || !data) {
+    return (
+      <p className={cn('py-4 text-sm text-muted-foreground', className)}>
+        Filters could not be loaded right now.
+      </p>
+    );
+  }
+
   return (
     <div className={cn('flex flex-col', className)}>
       <FilterSection icon={Activity01Icon} title='Status'>
-        {renderRows('status', STATUS)}
+        {renderEnumRows('publicStatus', data.publicStatuses)}
       </FilterSection>
 
-      <FilterSection icon={Layers} title='Mode'>
-        {renderRows('mode', MODE)}
+      <FilterSection icon={CompassIcon} title='Origin'>
+        {renderEnumRows('originType', data.originTypes)}
       </FilterSection>
 
-      <FilterSection icon={Coins02Icon} title='Rewards'>
-        <Select
-          value={value.currency}
-          onValueChange={currency => onChange({ ...value, currency })}
-        >
-          <SelectTrigger
-            aria-label='Reward currency'
-            className='w-full border-[#1f2a28] text-foreground'
-          >
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value='USDC'>USDC</SelectItem>
-            <SelectItem value='XLM'>XLM</SelectItem>
-          </SelectContent>
-        </Select>
-        <div className='flex items-center gap-2'>
-          <Input
-            type='number'
-            inputSize='small'
-            placeholder='0'
-            aria-label='Minimum reward'
-            value={value.min}
-            onChange={event => onChange({ ...value, min: event.target.value })}
-            className='border-[#1f2a28]'
-          />
-          <span className='text-muted-foreground'>-</span>
-          <Input
-            type='number'
-            inputSize='small'
-            placeholder='0'
-            aria-label='Maximum reward'
-            value={value.max}
-            onChange={event => onChange({ ...value, max: event.target.value })}
-            className='border-[#1f2a28]'
-          />
-        </div>
+      <FilterSection icon={HashtagIcon} title='Category'>
+        {renderFacetRows('category', data.categories)}
       </FilterSection>
 
-      <FilterSection icon={HashtagIcon} title='Category' defaultOpen={false}>
-        {renderRows('category', CATEGORY)}
-      </FilterSection>
-
-      <FilterSection icon={MapPin} title='Country' defaultOpen={false}>
-        <div className='flex items-center gap-2 rounded-md border border-[#1f2a28] px-3 py-2'>
-          <Search
-            className='size-4 shrink-0 text-muted-foreground'
-            strokeWidth={1.75}
-            aria-hidden
-          />
-          <input
-            value={country}
-            onChange={event => setCountry(event.target.value)}
-            placeholder='Search here'
-            className='w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground'
-          />
-        </div>
-        {renderRows('country', countries)}
+      <FilterSection icon={Tag02Icon} title='Tags' defaultOpen={false}>
+        {renderFacetRows('tags', data.tags)}
       </FilterSection>
     </div>
   );
