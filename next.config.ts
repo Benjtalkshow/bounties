@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
         pathname: '/danuy5rqb/image/upload/**',
         search: '',
       },
+      // Avatars for builders who signed up with Google.
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+        search: '',
+      },
     ],
   },
 };

@@ -10,20 +10,15 @@ import { Section, SectionHeading } from '@/components/marketing/section';
 import { Button } from '@/components/ui/button';
 import { apiFetch } from '@/lib/api/client';
 
-import {
-  type LeaderboardData,
-  toBuilderCard,
-} from './to-builder-card';
+import { type TopBuilder, toBuilderCard } from './to-builder-card';
 
 const TOP_BUILDERS_LIMIT = 8;
 
 function useTopBuilders() {
   return useQuery({
-    queryKey: ['leaderboard', 'top-builders', TOP_BUILDERS_LIMIT],
+    queryKey: ['users', 'top-builders', TOP_BUILDERS_LIMIT],
     queryFn: () =>
-      apiFetch<LeaderboardData>(
-        `/leaderboard?limit=${TOP_BUILDERS_LIMIT}`
-      ),
+      apiFetch<TopBuilder[]>(`/users/top-builders?limit=${TOP_BUILDERS_LIMIT}`),
   });
 }
 
@@ -47,7 +42,7 @@ function EmptyState() {
 
 export function TopBuilders() {
   const { data, isError, isPending } = useTopBuilders();
-  const builders = data?.entries.map(toBuilderCard) ?? [];
+  const builders = data?.map(toBuilderCard) ?? [];
 
   return (
     <Section reveal innerClassName='flex flex-col gap-8'>
