@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { SearchIcon } from '@/components/icons';
 import { Input } from '@/components/ui/input';
@@ -33,10 +33,16 @@ export function ProjectSearch({
     [onSearchChange]
   );
 
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
+
   return (
     <div className='flex flex-col gap-4'>
       <Input
-        placeholder='Search opportunities, skills, or organizations'
+        placeholder='Search projects'
         leftIcon={<SearchIcon className='size-5' />}
         value={localSearch}
         onChange={handleSearchChange}
