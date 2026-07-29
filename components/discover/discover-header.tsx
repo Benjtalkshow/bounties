@@ -7,10 +7,13 @@ export function DiscoverHeader({
   heading,
   subtext,
   count,
+  showActions = true,
 }: {
   heading: string;
   subtext: string;
   count?: number;
+  /** Bookmarks / Leaderboard buttons. Off for views that have neither. */
+  showActions?: boolean;
 }) {
   return (
     <div className='flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between'>
@@ -26,28 +29,30 @@ export function DiscoverHeader({
         </h1>
         <p className='text-sm text-muted-foreground'>{subtext}</p>
       </div>
-      <div className='hidden items-center gap-3 sm:flex'>
-        <Button
-          appearance='outline'
-          intent='secondary'
-          shape='pill'
-          size='small'
-          aria-pressed='true'
-        >
-          <Bookmark className='size-4' strokeWidth={1.75} aria-hidden />
-          Bookmarks
-        </Button>
-        <Button
-          appearance='solid'
-          intent='white'
-          shape='pill'
-          size='small'
-          aria-pressed='true'
-        >
-          <Users className='size-4' strokeWidth={1.75} aria-hidden />
-          Leaderboard
-        </Button>
-      </div>
+      {showActions ? (
+        <div className='hidden items-center gap-3 sm:flex'>
+          <Button
+            appearance='outline'
+            intent='secondary'
+            shape='pill'
+            size='small'
+            aria-pressed='true'
+          >
+            <Bookmark className='size-4' strokeWidth={1.75} aria-hidden />
+            Bookmarks
+          </Button>
+          <Button
+            appearance='solid'
+            intent='white'
+            shape='pill'
+            size='small'
+            aria-pressed='true'
+          >
+            <Users className='size-4' strokeWidth={1.75} aria-hidden />
+            Leaderboard
+          </Button>
+        </div>
+      ) : null}
     </div>
   );
 }

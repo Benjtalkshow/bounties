@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import {
   FeaturedProjects,
   StatsStrip,
@@ -33,8 +35,8 @@ export default function Home() {
           </p>
           <div className='mt-10 flex flex-wrap items-center justify-center gap-4'>
             <Button size='large'>Explore builders</Button>
-            <Button intent='secondary' appearance='outline' size='large'>
-              View projects
+            <Button intent='secondary' appearance='outline' size='large' asChild>
+              <Link href='/projects'>View projects</Link>
             </Button>
           </div>
         </Section>
