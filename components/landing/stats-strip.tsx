@@ -3,6 +3,7 @@
 import { useQueries } from '@tanstack/react-query';
 
 import { Section } from '@/components/marketing/section';
+import { CountUp } from '@/components/ui/count-up';
 import { Skeleton } from '@/components/ui/skeleton';
 import { StatsBar, type StatItem } from '@/components/ui/stats-bar';
 import { apiFetch } from '@/lib/api/client';
@@ -25,8 +26,6 @@ const STATS = [
     queryKey: ['ecosystem-stats', 'teams'],
   },
 ] as const;
-
-const numberFormatter = new Intl.NumberFormat('en-US');
 
 function NumberSkeleton({ mobile = false }: { mobile?: boolean }) {
   return (
@@ -74,9 +73,7 @@ export function StatsStrip() {
       return [];
     }
 
-    const value = numberFormatter.format(query.data);
-
-    return [{ label: stat.label, value }];
+    return [{ label: stat.label, value: <CountUp value={query.data} /> }];
   });
 
   if (items.length === 0) return null;
