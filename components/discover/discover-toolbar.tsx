@@ -21,6 +21,7 @@ export function DiscoverToolbar({
   onReset,
   query,
   onQueryChange,
+  placeholder = 'Search opportunities, skills, or organizations',
 }: {
   filtersOpen: boolean;
   onToggleFilters: () => void;
@@ -29,6 +30,7 @@ export function DiscoverToolbar({
   onReset: () => void;
   query: string;
   onQueryChange: (value: string) => void;
+  placeholder?: string;
 }) {
   return (
     <div className='flex items-center gap-3'>
@@ -81,7 +83,7 @@ export function DiscoverToolbar({
         <input
           value={query}
           onChange={event => onQueryChange(event.target.value)}
-          placeholder='Search opportunities, skills, or organizations'
+          placeholder={placeholder}
           className='w-full bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground'
         />
       </div>
