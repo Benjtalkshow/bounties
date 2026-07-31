@@ -14,7 +14,7 @@ import {
   type FilterValue,
 } from './filter-rail';
 import { FilterSheet } from './filter-sheet';
-import { ProjectsResults } from './projects-results';
+import { ProjectsGrid } from './projects-grid';
 import {
   useProjectFilters,
   useProjects,
@@ -122,7 +122,7 @@ export function ProjectsView() {
         ) : null}
 
         <div className='min-w-0 flex-1'>
-          <ProjectsResults
+          <ProjectsGrid
             data={data}
             isPending={isPending}
             isError={isError}
