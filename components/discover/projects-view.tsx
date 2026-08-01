@@ -94,7 +94,6 @@ export function ProjectsView() {
         heading='Projects'
         subtext='Explore the products being built across the Boundless ecosystem.'
         count={data?.pagination.total}
-        showActions={false}
       />
 
       <CategoryTabs

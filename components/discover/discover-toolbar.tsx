@@ -21,7 +21,7 @@ export function DiscoverToolbar({
   onReset,
   query,
   onQueryChange,
-  placeholder = 'Search opportunities, skills, or organizations',
+  placeholder = 'Search',
 }: {
   filtersOpen: boolean;
   onToggleFilters: () => void;
