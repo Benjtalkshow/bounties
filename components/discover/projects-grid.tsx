@@ -68,13 +68,15 @@ export function ProjectsGrid({
         ))}
       </div>
 
-      <Pagination
-        page={page}
-        pageSize={pageSize}
-        totalItems={data.pagination.total}
-        onPageChange={onPageChange}
-        className='justify-between'
-      />
+      {data.pagination.total > 0 && (
+        <Pagination
+          page={page}
+          pageSize={pageSize}
+          totalItems={data.pagination.total}
+          onPageChange={onPageChange}
+          className='justify-between'
+        />
+      )}
     </div>
   );
 }
