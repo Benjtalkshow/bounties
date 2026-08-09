@@ -43,10 +43,11 @@ export function HeroBackground({
   children?: ReactNode;
   fieldHeight?: number;
   /**
-   * For heroes stretched to the footer: resolve the teal tint back to ink at
-   * the very bottom within this one gradient, so the page meets the next
-   * section with no seam (instead of clipping at the teal peak). Default heroes
-   * keep the tint peaking at the bottom edge.
+   * Peak the teal tint just above the bottom, then resolve it back to ink at
+   * the very bottom within this one gradient, so the hero meets whatever
+   * follows with no seam (instead of clipping at the teal peak). Default heroes
+   * keep the tint peaking at the bottom edge, which only reads clean when the
+   * next section starts on the same teal.
    */
   fadeBottom?: boolean;
 }) {
