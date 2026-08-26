@@ -22,8 +22,8 @@ interface HeroSectionProps {
   showMedia?: boolean;
   /**
    * Resolve the teal tint back to ink at the very bottom so the hero meets the
-   * next section (or the footer) with no seam. Use when the hero sits directly
-   * above the footer.
+   * next section (or the footer) with no seam. Leave off only when the section
+   * below starts on the same teal tint.
    */
   fadeBottom?: boolean;
   className?: string;
