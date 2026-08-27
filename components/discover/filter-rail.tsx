@@ -9,48 +9,21 @@ import {
   useState,
 } from 'react';
 
-import {
-  Activity01Icon,
-  CompassIcon,
-  HashtagIcon,
-  Tag02Icon,
-} from '@/components/icons';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Skeleton } from '@/components/ui/skeleton';
 import { transitions } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 
-import type { FacetCount } from './use-projects';
-import { useProjectFilters } from './use-projects';
-
-export type CheckboxGroup =
-  | 'category'
-  | 'tags'
-  | 'publicStatus'
-  | 'originType';
-
-export interface FilterValue {
-  category: string[];
-  tags: string[];
-  publicStatus: string[];
-  originType: string[];
-}
-
-export const EMPTY_FILTERS: FilterValue = {
-  category: [],
-  tags: [],
-  publicStatus: [],
-  originType: [],
-};
+/**
+ * Any selection state shaped as named groups of strings (skills, country,
+ * status, category, tags, ...). The generic shape is what lets the rail drive
+ * both the projects and builders directories from one component.
+ */
+export type FilterValue = Record<string, string[]>;
 
 /** True once the visitor has narrowed the results with any control. */
 export function hasActiveFilters(value: FilterValue): boolean {
-  return (
-    value.category.length > 0 ||
-    value.tags.length > 0 ||
-    value.publicStatus.length > 0 ||
-    value.originType.length > 0
-  );
+  return Object.values(value).some(group => group.length > 0);
 }
 
 /** `IN_DEVELOPMENT` -> `In Development`. */
@@ -64,6 +37,25 @@ function formatLabel(value: string): string {
 
 /** Accepts both lucide icons and our generated SVG icon components. */
 type FilterSectionIcon = ComponentType<SVGProps<SVGSVGElement>>;
+
+/** A facet row item. `label` lets a raw value render a friendlier display name. */
+export interface FacetCount {
+  value: string;
+  count: number;
+  label?: string;
+}
+
+/** One collapsible group rendered by the rail. */
+export interface FilterSectionConfig {
+  /** Key into `FilterValue` this section reads and writes. */
+  group: string;
+  title: string;
+  icon: FilterSectionIcon;
+  /** Facet rows show `value (count)`; enum rows format SCREAMING_SNAKE labels. */
+  kind: 'facet' | 'enum';
+  defaultOpen?: boolean;
+  items: FacetCount[] | string[];
+}
 
 function FilterSection({
   icon: Icon,
@@ -137,52 +129,60 @@ function CheckRow({
 }
 
 /**
- * Discovery filter controls, used in the desktop sidebar and the mobile sheet.
- * Controlled: the parent owns `value` so it can show a Reset affordance and run
- * the query. `idPrefix` keeps the two instances from sharing input ids.
+ * Discovery filter controls, shared by the desktop sidebar and the mobile
+ * sheet. Controlled: the parent owns `value` so it can show a Reset affordance
+ * and run the query. Sections are configured by the parent, so the projects
+ * (category/tags/status/origin) and builders (skills/country/status) pages
+ * render the same controls from one source. `idPrefix` keeps the two instances
+ * from sharing input ids.
  */
 export function FilterRail({
+  sections,
   value,
   onChange,
   idPrefix = 'rail',
+  isPending = false,
+  isError = false,
   className,
 }: {
+  sections: FilterSectionConfig[];
   value: FilterValue;
   onChange: (value: FilterValue) => void;
   idPrefix?: string;
+  isPending?: boolean;
+  isError?: boolean;
   className?: string;
 }) {
-  const { data, isPending, isError } = useProjectFilters();
-
-  const toggle = (group: CheckboxGroup, item: string) => {
-    const current = value[group];
+  const toggle = (group: string, item: string) => {
+    const current = value[group] ?? [];
     const next = current.includes(item)
       ? current.filter(entry => entry !== item)
       : [...current, item];
     onChange({ ...value, [group]: next });
   };
 
-  const renderFacetRows = (group: CheckboxGroup, items: FacetCount[]) =>
-    items.map(item => (
+  const renderRows = (section: FilterSectionConfig) => {
+    if (section.kind === 'enum') {
+      return (section.items as string[]).map(item => (
+        <CheckRow
+          key={item}
+          id={`${idPrefix}-${section.group}-${item}`}
+          label={formatLabel(item)}
+          checked={(value[section.group] ?? []).includes(item)}
+          onToggle={() => toggle(section.group, item)}
+        />
+      ));
+    }
+    return (section.items as FacetCount[]).map(item => (
       <CheckRow
         key={item.value}
-        id={`${idPrefix}-${group}-${item.value}`}
-        label={`${item.value} (${item.count})`}
-        checked={value[group].includes(item.value)}
-        onToggle={() => toggle(group, item.value)}
+        id={`${idPrefix}-${section.group}-${item.value}`}
+        label={`${item.label ?? item.value} (${item.count})`}
+        checked={(value[section.group] ?? []).includes(item.value)}
+        onToggle={() => toggle(section.group, item.value)}
       />
     ));
-
-  const renderEnumRows = (group: CheckboxGroup, items: string[]) =>
-    items.map(item => (
-      <CheckRow
-        key={item}
-        id={`${idPrefix}-${group}-${item}`}
-        label={formatLabel(item)}
-        checked={value[group].includes(item)}
-        onToggle={() => toggle(group, item)}
-      />
-    ));
+  };
 
   if (isPending) {
     return (
@@ -194,7 +194,7 @@ export function FilterRail({
     );
   }
 
-  if (isError || !data) {
+  if (isError) {
     return (
       <p className={cn('py-4 text-sm text-muted-foreground', className)}>
         Filters could not be loaded right now.
@@ -204,21 +204,16 @@ export function FilterRail({
 
   return (
     <div className={cn('flex flex-col', className)}>
-      <FilterSection icon={Activity01Icon} title='Status'>
-        {renderEnumRows('publicStatus', data.publicStatuses)}
-      </FilterSection>
-
-      <FilterSection icon={CompassIcon} title='Origin'>
-        {renderEnumRows('originType', data.originTypes)}
-      </FilterSection>
-
-      <FilterSection icon={HashtagIcon} title='Category'>
-        {renderFacetRows('category', data.categories)}
-      </FilterSection>
-
-      <FilterSection icon={Tag02Icon} title='Tags' defaultOpen={false}>
-        {renderFacetRows('tags', data.tags)}
-      </FilterSection>
+      {sections.map(section => (
+        <FilterSection
+          key={section.group}
+          icon={section.icon}
+          title={section.title}
+          defaultOpen={section.defaultOpen}
+        >
+          {renderRows(section)}
+        </FilterSection>
+      ))}
     </div>
   );
 }

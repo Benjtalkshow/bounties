@@ -1,16 +1,11 @@
 'use client';
 
+import { getCountryDataList } from 'countries-list';
 import { useEffect, useMemo, useState } from 'react';
 
-import {
-  Activity01Icon,
-  CompassIcon,
-  HashtagIcon,
-  Tag02Icon,
-} from '@/components/icons';
+import { Activity01Icon, CodeIcon, GlobeIcon } from '@/components/icons';
 import { Section } from '@/components/marketing/section';
 
-import { CategoryTabs } from './category-tabs';
 import { DiscoverHeader } from './discover-header';
 import { DiscoverToolbar } from './discover-toolbar';
 import {
@@ -20,31 +15,39 @@ import {
   type FilterValue,
 } from './filter-rail';
 import { FilterSheet } from './filter-sheet';
-import { ProjectsGrid } from './projects-grid';
+import { BuildersGrid } from './builders-grid';
 import {
-  useProjectFilters,
-  useProjects,
-  type ProjectsQueryParams,
-} from './use-projects';
+  useBuilderFilters,
+  useBuilders,
+  type BuildersQueryParams,
+} from './use-builders';
 
 const PAGE_SIZE = 12;
-const ALL_CATEGORIES = 'All';
 const SEARCH_DEBOUNCE_MS = 300;
 
 const EMPTY_FILTERS: FilterValue = {
-  category: [],
-  tags: [],
-  publicStatus: [],
-  originType: [],
+  skills: [],
+  country: [],
+  status: [],
 };
 
+/** ISO alpha-2 code -> country name, for friendlier facet labels. */
+const COUNTRY_NAMES = new Map<string, string>(
+  getCountryDataList().map(country => [country.iso2, country.name])
+);
+
+function countryLabel(code: string): string | undefined {
+  return COUNTRY_NAMES.get(code.toUpperCase());
+}
+
 /**
- * The `/projects` directory. Owns the search, category, filter, and page state
- * and feeds it to `useProjects`, so the controls, the rail, and the grid all
- * read from one source. The projects equivalent of the boundless `discover-view`,
- * minus the pillar tabs, since this page is projects only.
+ * The `/builders` directory. Owns the search, filter, and page state and feeds
+ * it to `useBuilders`, so the rail, the sheet, and the grid all read from one
+ * source. `railOpen` drives the desktop sidebar toggle; `sheetOpen` drives the
+ * mobile full-screen sheet, which renders the exact same `FilterRail` instance
+ * configuration under a distinct `idPrefix`.
  */
-export function ProjectsView() {
+export function BuildersView() {
   const [searchInput, setSearchInput] = useState('');
   const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<FilterValue>(EMPTY_FILTERS);
@@ -67,91 +70,66 @@ export function ProjectsView() {
     setPage(1);
   };
 
-  const params = useMemo<ProjectsQueryParams>(
+  const params = useMemo<BuildersQueryParams>(
     () => ({
       page,
       limit: PAGE_SIZE,
       search: search || undefined,
-      // `GET /projects` takes a single value for these three, so a multi-select
-      // in the rail sends its first entry. Only `tags` is repeatable.
-      category: filters.category?.[0],
-      publicStatus: filters.publicStatus?.[0],
-      originType: filters.originType?.[0],
-      tags: filters.tags?.length ? filters.tags : undefined,
+      // `GET /users/directory` takes a single value for these two, so a
+      // multi-select in the rail sends its first entry. Only `skills` is
+      // repeatable.
+      skills: filters.skills?.length ? filters.skills : undefined,
+      country: filters.country?.[0],
+      status: filters.status?.[0],
     }),
     [page, search, filters]
   );
 
-  const { data, isError, isPending } = useProjects(params);
+  const { data, isError, isPending } = useBuilders(params);
   const {
     data: facets,
     isPending: facetsPending,
     isError: facetsError,
-  } = useProjectFilters();
-
-  const categories = useMemo(
-    () => [
-      ALL_CATEGORIES,
-      ...(facets?.categories.map(item => item.value) ?? []),
-    ],
-    [facets]
-  );
+  } = useBuilderFilters();
 
   const filterSections = useMemo<FilterSectionConfig[]>(() => {
     if (!facets) return [];
     return [
       {
-        group: 'publicStatus',
+        group: 'skills',
+        title: 'Skills',
+        icon: CodeIcon,
+        kind: 'facet',
+        items: facets.skills,
+      },
+      {
+        group: 'country',
+        title: 'Country',
+        icon: GlobeIcon,
+        kind: 'facet',
+        items: facets.countries.map(item => ({
+          ...item,
+          label: countryLabel(item.value) ?? item.value,
+        })),
+      },
+      {
+        group: 'status',
         title: 'Status',
         icon: Activity01Icon,
         kind: 'enum',
-        items: facets.publicStatuses,
-      },
-      {
-        group: 'originType',
-        title: 'Origin',
-        icon: CompassIcon,
-        kind: 'enum',
-        items: facets.originTypes,
-      },
-      {
-        group: 'category',
-        title: 'Category',
-        icon: HashtagIcon,
-        kind: 'facet',
-        items: facets.categories,
-      },
-      {
-        group: 'tags',
-        title: 'Tags',
-        icon: Tag02Icon,
-        kind: 'facet',
-        defaultOpen: false,
-        items: facets.tags,
+        items: facets.statuses,
       },
     ];
   }, [facets]);
 
   const reset = () => applyFilters(EMPTY_FILTERS);
 
-  const selectCategory = (category: string) =>
-    applyFilters({
-      ...filters,
-      category: category === ALL_CATEGORIES ? [] : [category],
-    });
-
   return (
     <Section className='py-10 lg:py-12' innerClassName='flex flex-col gap-6'>
       <DiscoverHeader
-        heading='Projects'
-        subtext='Explore the products being built across the Boundless ecosystem.'
+        heading='Builders'
+        subtext='Meet the builders making an impact across the Boundless ecosystem.'
         count={data?.pagination.total}
-      />
-
-      <CategoryTabs
-        categories={categories}
-        active={filters.category?.[0] ?? ALL_CATEGORIES}
-        onSelect={selectCategory}
       />
 
       <DiscoverToolbar
@@ -162,13 +140,14 @@ export function ProjectsView() {
         onReset={reset}
         query={searchInput}
         onQueryChange={setSearchInput}
-        placeholder='Search projects, categories, or tags'
+        placeholder='Search builders, skills, or locations'
       />
 
       <div className='flex items-start gap-6'>
         {railOpen ? (
           <aside className='hidden w-[260px] shrink-0 lg:block'>
             <FilterRail
+              idPrefix='rail'
               sections={filterSections}
               value={filters}
               onChange={applyFilters}
@@ -179,7 +158,7 @@ export function ProjectsView() {
         ) : null}
 
         <div className='min-w-0 flex-1'>
-          <ProjectsGrid
+          <BuildersGrid
             data={data}
             isPending={isPending}
             isError={isError}
