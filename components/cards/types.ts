@@ -30,8 +30,8 @@ export interface BuilderCardView {
   followers?: number;
   /** Project count when available. */
   projects?: number;
-  /** Profile page path so cards can link out. */
-  detailUrl: string;
+  /** Profile page path so cards can link out. Absent when the builder has no URL-safe username. */
+  detailUrl?: string;
 }
 
 export interface OpportunityCardView {

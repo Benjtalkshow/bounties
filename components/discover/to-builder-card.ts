@@ -9,7 +9,8 @@ const MAX_SKILLS = 4;
  * mapper (`components/landing/to-builder-card.ts`) fills followers/projects from
  * `TopBuilder`; directory rows carry neither, so those stay undefined and the
  * card simply omits them. `role` on the DTO is the account role, not a job
- * title, so it is not mapped either.
+ * title, so it is not mapped either. A row without a username has no profile
+ * URL, so the card renders without a link rather than pointing at the raw uuid.
  */
 export function toBuilderCard(builder: BuilderListItem): BuilderCardView {
   const username = builder.username ?? builder.id;
@@ -20,6 +21,6 @@ export function toBuilderCard(builder: BuilderListItem): BuilderCardView {
     avatarSrc: builder.image ?? undefined,
     location: builder.location ?? builder.country ?? undefined,
     skills: builder.skills.slice(0, MAX_SKILLS),
-    detailUrl: `/builders/${username}`,
+    detailUrl: builder.username ? `/builders/${builder.username}` : undefined,
   };
 }

@@ -46,16 +46,27 @@ export interface FacetCount {
 }
 
 /** One collapsible group rendered by the rail. */
-export interface FilterSectionConfig {
+interface FilterSectionConfigBase {
   /** Key into `FilterValue` this section reads and writes. */
   group: string;
   title: string;
   icon: FilterSectionIcon;
-  /** Facet rows show `value (count)`; enum rows format SCREAMING_SNAKE labels. */
-  kind: 'facet' | 'enum';
   defaultOpen?: boolean;
-  items: FacetCount[] | string[];
 }
+
+/** Facet rows show `value (count)` from `FacetCount[]`. */
+export interface FacetSectionConfig extends FilterSectionConfigBase {
+  kind: 'facet';
+  items: FacetCount[];
+}
+
+/** Enum rows format SCREAMING_SNAKE labels from `string[]`. */
+export interface EnumSectionConfig extends FilterSectionConfigBase {
+  kind: 'enum';
+  items: string[];
+}
+
+export type FilterSectionConfig = FacetSectionConfig | EnumSectionConfig;
 
 function FilterSection({
   icon: Icon,
@@ -163,7 +174,7 @@ export function FilterRail({
 
   const renderRows = (section: FilterSectionConfig) => {
     if (section.kind === 'enum') {
-      return (section.items as string[]).map(item => (
+      return section.items.map(item => (
         <CheckRow
           key={item}
           id={`${idPrefix}-${section.group}-${item}`}
@@ -173,7 +184,7 @@ export function FilterRail({
         />
       ));
     }
-    return (section.items as FacetCount[]).map(item => (
+    return section.items.map(item => (
       <CheckRow
         key={item.value}
         id={`${idPrefix}-${section.group}-${item.value}`}
