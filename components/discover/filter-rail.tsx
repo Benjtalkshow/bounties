@@ -53,6 +53,14 @@ export function hasActiveFilters(value: FilterValue): boolean {
   );
 }
 
+/** Generic filter value that can hold any filter groups */
+export type GenericFilterValue = Record<string, string[]>;
+
+/** Check if any filters are active in a generic filter value */
+export function hasActiveGenericFilters(value: GenericFilterValue): boolean {
+  return Object.values(value).some(arr => arr.length > 0);
+}
+
 /** `IN_DEVELOPMENT` -> `In Development`. */
 function formatLabel(value: string): string {
   return value
@@ -64,6 +72,22 @@ function formatLabel(value: string): string {
 
 /** Accepts both lucide icons and our generated SVG icon components. */
 type FilterSectionIcon = ComponentType<SVGProps<SVGSVGElement>>;
+
+/** Configuration for a single filter section */
+export interface FilterSectionConfig {
+  /** Unique key for this filter group */
+  key: string;
+  /** Icon component */
+  icon: FilterSectionIcon;
+  /** Display title */
+  title: string;
+  /** Whether section is open by default */
+  defaultOpen?: boolean;
+  /** Type of items in this section */
+  type: 'facets' | 'enum';
+  /** Items to render (facets with counts or plain enums) */
+  items: FacetCount[] | string[];
+}
 
 function FilterSection({
   icon: Icon,
@@ -219,6 +243,93 @@ export function FilterRail({
       <FilterSection icon={Tag02Icon} title='Tags' defaultOpen={false}>
         {renderFacetRows('tags', data.tags)}
       </FilterSection>
+    </div>
+  );
+}
+
+/**
+ * Generic filter rail that accepts sections configuration.
+ * Can be used for any filtering use case by passing appropriate sections.
+ */
+export function GenericFilterRail({
+  sections,
+  value,
+  onChange,
+  isPending,
+  isError,
+  idPrefix = 'rail',
+  className,
+}: {
+  sections: FilterSectionConfig[];
+  value: GenericFilterValue;
+  onChange: (value: GenericFilterValue) => void;
+  isPending: boolean;
+  isError: boolean;
+  idPrefix?: string;
+  className?: string;
+}) {
+  const toggle = (group: string, item: string) => {
+    const current = value[group] || [];
+    const next = current.includes(item)
+      ? current.filter(entry => entry !== item)
+      : [...current, item];
+    onChange({ ...value, [group]: next });
+  };
+
+  const renderFacetRows = (group: string, items: FacetCount[]) =>
+    items.map(item => (
+      <CheckRow
+        key={item.value}
+        id={`${idPrefix}-${group}-${item.value}`}
+        label={`${item.value} (${item.count})`}
+        checked={(value[group] || []).includes(item.value)}
+        onToggle={() => toggle(group, item.value)}
+      />
+    ));
+
+  const renderEnumRows = (group: string, items: string[]) =>
+    items.map(item => (
+      <CheckRow
+        key={item}
+        id={`${idPrefix}-${group}-${item}`}
+        label={formatLabel(item)}
+        checked={(value[group] || []).includes(item)}
+        onToggle={() => toggle(group, item)}
+      />
+    ));
+
+  if (isPending) {
+    return (
+      <div className={cn('flex flex-col gap-3 py-4', className)}>
+        {Array.from({ length: 4 }, (_, index) => (
+          <Skeleton key={index} className='h-4 w-full' />
+        ))}
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <p className={cn('py-4 text-sm text-muted-foreground', className)}>
+        Filters could not be loaded right now.
+      </p>
+    );
+  }
+
+  return (
+    <div className={cn('flex flex-col', className)}>
+      {sections.map(section => (
+        <FilterSection
+          key={section.key}
+          icon={section.icon}
+          title={section.title}
+          defaultOpen={section.defaultOpen}
+        >
+          {section.type === 'facets'
+            ? renderFacetRows(section.key, section.items as FacetCount[])
+            : renderEnumRows(section.key, section.items as string[])}
+        </FilterSection>
+      ))}
     </div>
   );
 }
