@@ -2,28 +2,26 @@
 
 import { XIcon } from 'lucide-react';
 import { Dialog as DialogPrimitive } from 'radix-ui';
+import type { ReactNode } from 'react';
 
 import { Button } from '@/components/ui/button';
-
-import { FilterRail, type FilterValue } from './filter-rail';
 
 /**
  * Full-screen filter sheet for mobile. Opened from the toolbar's filter button;
  * fills the viewport, scrolls the rail, and keeps Reset/Done pinned. Triggered
- * only below `lg`, where the inline rail is hidden.
+ * only below `lg`, where the inline rail is hidden. The filter controls are
+ * passed as children so the sheet and the rail always render the same source.
  */
 export function FilterSheet({
   open,
   onOpenChange,
-  value,
-  onChange,
   onReset,
+  children,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  value: FilterValue;
-  onChange: (value: FilterValue) => void;
   onReset: () => void;
+  children: ReactNode;
 }) {
   return (
     <DialogPrimitive.Root open={open} onOpenChange={onOpenChange}>
@@ -51,9 +49,7 @@ export function FilterSheet({
             </DialogPrimitive.Close>
           </div>
 
-          <div className='flex-1 overflow-y-auto px-5'>
-            <FilterRail idPrefix='sheet' value={value} onChange={onChange} />
-          </div>
+          <div className='flex-1 overflow-y-auto px-5'>{children}</div>
 
           <div className='flex items-center gap-3 border-t border-[#1f2a28] px-5 py-4'>
             <Button

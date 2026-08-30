@@ -2,15 +2,21 @@
 
 import { useEffect, useMemo, useState } from 'react';
 
+import {
+  Activity01Icon,
+  CompassIcon,
+  HashtagIcon,
+  Tag02Icon,
+} from '@/components/icons';
 import { Section } from '@/components/marketing/section';
 
 import { CategoryTabs } from './category-tabs';
 import { DiscoverHeader } from './discover-header';
 import { DiscoverToolbar } from './discover-toolbar';
 import {
-  EMPTY_FILTERS,
   FilterRail,
   hasActiveFilters,
+  type FilterSectionConfig,
   type FilterValue,
 } from './filter-rail';
 import { FilterSheet } from './filter-sheet';
@@ -24,6 +30,13 @@ import {
 const PAGE_SIZE = 12;
 const ALL_CATEGORIES = 'All';
 const SEARCH_DEBOUNCE_MS = 300;
+
+const EMPTY_FILTERS: FilterValue = {
+  category: [],
+  tags: [],
+  publicStatus: [],
+  originType: [],
+};
 
 /**
  * The `/projects` directory. Owns the search, category, filter, and page state
@@ -61,16 +74,20 @@ export function ProjectsView() {
       search: search || undefined,
       // `GET /projects` takes a single value for these three, so a multi-select
       // in the rail sends its first entry. Only `tags` is repeatable.
-      category: filters.category[0],
-      publicStatus: filters.publicStatus[0],
-      originType: filters.originType[0],
-      tags: filters.tags.length > 0 ? filters.tags : undefined,
+      category: filters.category?.[0],
+      publicStatus: filters.publicStatus?.[0],
+      originType: filters.originType?.[0],
+      tags: filters.tags?.length ? filters.tags : undefined,
     }),
     [page, search, filters]
   );
 
   const { data, isError, isPending } = useProjects(params);
-  const { data: facets } = useProjectFilters();
+  const {
+    data: facets,
+    isPending: facetsPending,
+    isError: facetsError,
+  } = useProjectFilters();
 
   const categories = useMemo(
     () => [
@@ -79,6 +96,45 @@ export function ProjectsView() {
     ],
     [facets]
   );
+
+  const filterSections = useMemo<FilterSectionConfig[]>(() => {
+    if (!facets) return [];
+    return [
+      {
+        group: 'publicStatus',
+        selection: 'single',
+        title: 'Status',
+        icon: Activity01Icon,
+        kind: 'enum',
+        items: facets.publicStatuses,
+      },
+      {
+        group: 'originType',
+        selection: 'single',
+        title: 'Origin',
+        icon: CompassIcon,
+        kind: 'enum',
+        items: facets.originTypes,
+      },
+      {
+        group: 'category',
+        selection: 'single',
+        title: 'Category',
+        icon: HashtagIcon,
+        kind: 'facet',
+        items: facets.categories,
+      },
+      {
+        group: 'tags',
+        selection: 'multi',
+        title: 'Tags',
+        icon: Tag02Icon,
+        kind: 'facet',
+        defaultOpen: false,
+        items: facets.tags,
+      },
+    ];
+  }, [facets]);
 
   const reset = () => applyFilters(EMPTY_FILTERS);
 
@@ -98,7 +154,7 @@ export function ProjectsView() {
 
       <CategoryTabs
         categories={categories}
-        active={filters.category[0] ?? ALL_CATEGORIES}
+        active={filters.category?.[0] ?? ALL_CATEGORIES}
         onSelect={selectCategory}
       />
 
@@ -116,7 +172,13 @@ export function ProjectsView() {
       <div className='flex items-start gap-6'>
         {railOpen ? (
           <aside className='hidden w-[260px] shrink-0 lg:block'>
-            <FilterRail value={filters} onChange={applyFilters} />
+            <FilterRail
+              sections={filterSections}
+              value={filters}
+              onChange={applyFilters}
+              isPending={facetsPending}
+              isError={facetsError}
+            />
           </aside>
         ) : null}
 
@@ -136,10 +198,17 @@ export function ProjectsView() {
       <FilterSheet
         open={sheetOpen}
         onOpenChange={setSheetOpen}
-        value={filters}
-        onChange={applyFilters}
         onReset={reset}
-      />
+      >
+        <FilterRail
+          idPrefix='sheet'
+          sections={filterSections}
+          value={filters}
+          onChange={applyFilters}
+          isPending={facetsPending}
+          isError={facetsError}
+        />
+      </FilterSheet>
     </Section>
   );
 }
