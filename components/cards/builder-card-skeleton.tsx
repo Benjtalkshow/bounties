@@ -1,7 +1,15 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
-/** Loading placeholder that mirrors the BuilderCard layout. */
-export function BuilderCardSkeleton() {
+/**
+ * Loading placeholder that mirrors the BuilderCard layout. `showStats` must
+ * match the card it stands in for: the directory omits follower and project
+ * counts, so reserving room for them here makes the grid jump on load.
+ */
+export function BuilderCardSkeleton({
+  showStats = true,
+}: {
+  showStats?: boolean;
+} = {}) {
   return (
     <div className='flex flex-col gap-5 rounded-2xl border border-border bg-ink p-4'>
       <div className='flex items-center gap-3'>
@@ -22,12 +30,16 @@ export function BuilderCardSkeleton() {
         <Skeleton className='h-5 w-14 rounded-full' />
       </div>
 
-      <span aria-hidden className='h-px w-full bg-border' />
+      {showStats && (
+        <>
+          <span aria-hidden className='h-px w-full bg-border' />
 
-      <div className='flex items-center gap-4'>
-        <Skeleton className='h-4 w-24' />
-        <Skeleton className='h-4 w-20' />
-      </div>
+          <div className='flex items-center gap-4'>
+            <Skeleton className='h-4 w-24' />
+            <Skeleton className='h-4 w-20' />
+          </div>
+        </>
+      )}
     </div>
   );
 }
