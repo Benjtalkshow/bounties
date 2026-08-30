@@ -13,6 +13,28 @@ import { AnimatePresence, motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { transitions } from '@/lib/motion';
 
+/**
+ * Filter wiring is all or nothing. A page either owns filter state and passes
+ * every handler, or it passes none and the toolbar shows search alone. Making
+ * this a union means a half-wired caller is a type error rather than a toolbar
+ * that quietly drops its filter controls.
+ */
+type FilterProps =
+  | {
+      filtersOpen: boolean;
+      onToggleFilters: () => void;
+      onOpenMobileFilters: () => void;
+      filtersActive: boolean;
+      onReset: () => void;
+    }
+  | {
+      filtersOpen?: never;
+      onToggleFilters?: never;
+      onOpenMobileFilters?: never;
+      filtersActive?: never;
+      onReset?: never;
+    };
+
 export function DiscoverToolbar({
   filtersOpen = false,
   onToggleFilters,
@@ -23,22 +45,17 @@ export function DiscoverToolbar({
   query,
   onQueryChange,
   placeholder = 'Search',
-}: {
-  filtersOpen?: boolean;
-  onToggleFilters?: () => void;
-  onOpenMobileFilters?: () => void;
-  filtersActive?: boolean;
-  onReset?: () => void;
+}: FilterProps & {
   /** Hide the sort pill on pages that don't wire sorting yet (e.g. `/builders`). */
   showSort?: boolean;
   query: string;
   onQueryChange: (value: string) => void;
   placeholder?: string;
 }) {
-  // Filter controls are only rendered on pages that own filter state. Pages like
-  // `/builders` only wire search today, so they omit the handlers and the toolbar
-  // shows search alone instead of a Filters button that does nothing.
-  const showFilters = Boolean(onToggleFilters && onOpenMobileFilters && onReset);
+  // Pages like `/builders` only wire search today, so they omit the handlers and
+  // the toolbar shows search alone instead of a Filters button that does nothing.
+  // `FilterProps` guarantees these arrive together, so one check covers all three.
+  const showFilters = onToggleFilters !== undefined;
 
   return (
     <div className='flex items-center gap-3'>

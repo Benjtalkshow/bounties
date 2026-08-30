@@ -32,7 +32,7 @@ export function BuildersGrid({
     return (
       <div className={GRID_CLASS}>
         {Array.from({ length: pageSize }, (_, index) => (
-          <BuilderCardSkeleton key={index} />
+          <BuilderCardSkeleton key={index} showStats={false} />
         ))}
       </div>
     );

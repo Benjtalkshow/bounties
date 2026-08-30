@@ -30,7 +30,9 @@ export function BuildersView() {
   // invalidates the page number, so the debounce resets it too.
   useEffect(() => {
     const timer = setTimeout(() => {
-      setSearch(searchInput);
+      // Trim before it reaches the query: a spaces-only box is an empty search,
+      // not a search that matches nothing.
+      setSearch(searchInput.trim());
       setPage(1);
     }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(timer);
