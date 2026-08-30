@@ -10,6 +10,9 @@ import type { Paginated, Schemas } from '@/lib/api/types';
  */
 export type BuilderListItemDto = Schemas['BuilderListItemDto'];
 
+/** Facets backing the builders filter rail. */
+export type BuilderFilters = Schemas['BuilderFiltersDto'];
+
 /** Query params `GET /users/directory` accepts from the directory page. */
 export interface BuildersQueryParams {
   page?: number;
@@ -25,6 +28,7 @@ export const buildersKeys = {
   all: ['builders'] as const,
   list: (params: BuildersQueryParams) =>
     ['builders', 'list', params] as const,
+  filters: ['builders', 'filters'] as const,
 };
 
 function toQueryString(params: BuildersQueryParams): string {
@@ -54,5 +58,13 @@ export function useBuilders(params: BuildersQueryParams = {}) {
       apiFetch<Paginated<BuilderListItemDto>>(
         `/users/directory${toQueryString(params)}`
       ),
+  });
+}
+
+/** Filter facets (skills, countries, statuses) for the builders directory. */
+export function useBuilderFilters() {
+  return useQuery({
+    queryKey: buildersKeys.filters,
+    queryFn: () => apiFetch<BuilderFilters>('/users/filters'),
   });
 }
