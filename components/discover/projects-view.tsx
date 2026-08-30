@@ -102,6 +102,7 @@ export function ProjectsView() {
     return [
       {
         group: 'publicStatus',
+        selection: 'single',
         title: 'Status',
         icon: Activity01Icon,
         kind: 'enum',
@@ -109,6 +110,7 @@ export function ProjectsView() {
       },
       {
         group: 'originType',
+        selection: 'single',
         title: 'Origin',
         icon: CompassIcon,
         kind: 'enum',
@@ -116,6 +118,7 @@ export function ProjectsView() {
       },
       {
         group: 'category',
+        selection: 'single',
         title: 'Category',
         icon: HashtagIcon,
         kind: 'facet',
@@ -123,6 +126,7 @@ export function ProjectsView() {
       },
       {
         group: 'tags',
+        selection: 'multi',
         title: 'Tags',
         icon: Tag02Icon,
         kind: 'facet',

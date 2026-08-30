@@ -10,6 +10,7 @@ import {
 } from 'react';
 
 import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Skeleton } from '@/components/ui/skeleton';
 import { transitions } from '@/lib/motion';
 import { cn } from '@/lib/utils';
@@ -46,27 +47,21 @@ export interface FacetCount {
 }
 
 /** One collapsible group rendered by the rail. */
-interface FilterSectionConfigBase {
+export interface FilterSectionConfig {
   /** Key into `FilterValue` this section reads and writes. */
   group: string;
   title: string;
   icon: FilterSectionIcon;
+  /** Facet rows show `value (count)`; enum rows format SCREAMING_SNAKE labels. */
+  kind: 'facet' | 'enum';
+  /**
+   * `single` renders radios and sends one value, matching endpoints that accept
+   * only one. `multi` renders checkboxes for genuinely repeatable params.
+   */
+  selection: 'single' | 'multi';
   defaultOpen?: boolean;
+  items: FacetCount[] | string[];
 }
-
-/** Facet rows show `value (count)` from `FacetCount[]`. */
-export interface FacetSectionConfig extends FilterSectionConfigBase {
-  kind: 'facet';
-  items: FacetCount[];
-}
-
-/** Enum rows format SCREAMING_SNAKE labels from `string[]`. */
-export interface EnumSectionConfig extends FilterSectionConfigBase {
-  kind: 'enum';
-  items: string[];
-}
-
-export type FilterSectionConfig = FacetSectionConfig | EnumSectionConfig;
 
 function FilterSection({
   icon: Icon,
@@ -139,6 +134,67 @@ function CheckRow({
   );
 }
 
+function RadioRow({
+  id,
+  value,
+  label,
+  checked,
+  onClear,
+}: {
+  id: string;
+  value: string;
+  label: string;
+  checked: boolean;
+  onClear: () => void;
+}) {
+  return (
+    // Clearing lives on the label, not the radio, so the circle and its text
+    // behave the same. Radix already no-ops a click on a checked radio, and
+    // preventDefault stops the label forwarding a second click to it, so one
+    // handler covers both targets and fires `onClear` exactly once. Space and
+    // Enter get the same treatment, since a checked radio ignores them and
+    // keyboard users would otherwise have no way to clear the filter.
+    <label
+      htmlFor={id}
+      className='flex cursor-pointer items-center gap-2'
+      onClick={event => {
+        if (!checked) return;
+        event.preventDefault();
+        onClear();
+      }}
+      onKeyDown={event => {
+        if (!checked || (event.key !== ' ' && event.key !== 'Enter')) return;
+        event.preventDefault();
+        onClear();
+      }}
+    >
+      <RadioGroupItem id={id} value={value} />
+      <span className='text-sm text-muted-foreground'>{label}</span>
+    </label>
+  );
+}
+
+/** Keep at most one selected value. Clicking the current value clears it. */
+function nextExclusiveValue(current: string[], item: string): string[] {
+  return current[0] === item ? [] : [item];
+}
+
+/** Rows a section renders, normalised so both kinds share one shape. */
+function sectionRows(
+  section: FilterSectionConfig
+): { value: string; label: string }[] {
+  if (section.kind === 'enum') {
+    return (section.items as string[]).map(item => ({
+      value: item,
+      label: formatLabel(item),
+    }));
+  }
+  return (section.items as FacetCount[]).map(item => ({
+    value: item.value,
+    label: `${item.label ?? item.value} (${item.count})`,
+  }));
+}
+
 /**
  * Discovery filter controls, shared by the desktop sidebar and the mobile
  * sheet. Controlled: the parent owns `value` so it can show a Reset affordance
@@ -164,6 +220,10 @@ export function FilterRail({
   isError?: boolean;
   className?: string;
 }) {
+  const selectExclusive = (group: string, item: string) => {
+    onChange({ ...value, [group]: nextExclusiveValue(value[group] ?? [], item) });
+  };
+
   const toggle = (group: string, item: string) => {
     const current = value[group] ?? [];
     const next = current.includes(item)
@@ -172,25 +232,39 @@ export function FilterRail({
     onChange({ ...value, [group]: next });
   };
 
-  const renderRows = (section: FilterSectionConfig) => {
-    if (section.kind === 'enum') {
-      return section.items.map(item => (
-        <CheckRow
-          key={item}
-          id={`${idPrefix}-${section.group}-${item}`}
-          label={formatLabel(item)}
-          checked={(value[section.group] ?? []).includes(item)}
-          onToggle={() => toggle(section.group, item)}
-        />
-      ));
+  const renderSection = (section: FilterSectionConfig) => {
+    const rows = sectionRows(section);
+    const selected = value[section.group] ?? [];
+
+    if (section.selection === 'single') {
+      return (
+        <RadioGroup
+          value={selected[0] ?? ''}
+          onValueChange={item => selectExclusive(section.group, item)}
+          name={`${idPrefix}-${section.group}`}
+          aria-label={section.title}
+        >
+          {rows.map(row => (
+            <RadioRow
+              key={row.value}
+              id={`${idPrefix}-${section.group}-${row.value}`}
+              value={row.value}
+              label={row.label}
+              checked={selected[0] === row.value}
+              onClear={() => selectExclusive(section.group, row.value)}
+            />
+          ))}
+        </RadioGroup>
+      );
     }
-    return section.items.map(item => (
+
+    return rows.map(row => (
       <CheckRow
-        key={item.value}
-        id={`${idPrefix}-${section.group}-${item.value}`}
-        label={`${item.label ?? item.value} (${item.count})`}
-        checked={(value[section.group] ?? []).includes(item.value)}
-        onToggle={() => toggle(section.group, item.value)}
+        key={row.value}
+        id={`${idPrefix}-${section.group}-${row.value}`}
+        label={row.label}
+        checked={selected.includes(row.value)}
+        onToggle={() => toggle(section.group, row.value)}
       />
     ));
   };
@@ -205,7 +279,7 @@ export function FilterRail({
     );
   }
 
-  if (isError) {
+  if (isError || sections.length === 0) {
     return (
       <p className={cn('py-4 text-sm text-muted-foreground', className)}>
         Filters could not be loaded right now.
@@ -222,7 +296,7 @@ export function FilterRail({
           title={section.title}
           defaultOpen={section.defaultOpen}
         >
-          {renderRows(section)}
+          {renderSection(section)}
         </FilterSection>
       ))}
     </div>

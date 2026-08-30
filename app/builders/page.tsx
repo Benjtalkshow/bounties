@@ -7,7 +7,7 @@ import { SiteHeader } from '@/components/layout/site-header';
 export const metadata: Metadata = {
   title: 'Builders',
   description:
-    'Meet the builders making an impact across the Boundless ecosystem.',
+    'Discover the builders shipping across the Boundless ecosystem.',
 };
 
 export default function BuildersPage() {

@@ -30,7 +30,7 @@ export interface BuilderCardView {
   followers?: number;
   /** Project count when available. */
   projects?: number;
-  /** Profile page path so cards can link out. Absent when the builder has no URL-safe username. */
+  /** Profile page path so cards can link out. Absent when no profile target exists (e.g. a directory row with a null username). */
   detailUrl?: string;
 }
 

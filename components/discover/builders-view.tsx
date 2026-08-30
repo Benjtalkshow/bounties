@@ -59,7 +59,7 @@ export function BuildersView() {
   // invalidates the page number, so the debounce resets it too.
   useEffect(() => {
     const timer = setTimeout(() => {
-      setSearch(searchInput);
+      setSearch(searchInput.trim());
       setPage(1);
     }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(timer);
@@ -75,9 +75,8 @@ export function BuildersView() {
       page,
       limit: PAGE_SIZE,
       search: search || undefined,
-      // `GET /users/directory` takes a single value for these two, so a
-      // multi-select in the rail sends its first entry. Only `skills` is
-      // repeatable.
+      // `GET /users/directory` takes a single value for these two, so their
+      // rail sections are single-select radios. Only `skills` is repeatable.
       skills: filters.skills?.length ? filters.skills : undefined,
       country: filters.country?.[0],
       status: filters.status?.[0],
@@ -97,6 +96,7 @@ export function BuildersView() {
     return [
       {
         group: 'skills',
+        selection: 'multi',
         title: 'Skills',
         icon: CodeIcon,
         kind: 'facet',
@@ -104,6 +104,7 @@ export function BuildersView() {
       },
       {
         group: 'country',
+        selection: 'single',
         title: 'Country',
         icon: GlobeIcon,
         kind: 'facet',
@@ -114,6 +115,7 @@ export function BuildersView() {
       },
       {
         group: 'status',
+        selection: 'single',
         title: 'Status',
         icon: Activity01Icon,
         kind: 'enum',

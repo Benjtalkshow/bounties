@@ -30,8 +30,7 @@ function Meta({
   );
 }
 
-/** A single builder card in the discovery grid or /builders directory. */
-export function BuilderCard({
+function BuilderCardBody({
   builder,
 }: {
   builder: BuilderCardView;
@@ -45,12 +44,14 @@ export function BuilderCard({
     skills: rawSkills,
     followers,
     projects,
-    detailUrl,
   } = builder;
   const skills = rawSkills ?? [];
+  // Directory rows have no follower/project counts, so the footer (and its
+  // divider) is skipped entirely rather than rendering a stray rule.
+  const showStats = followers !== undefined || projects !== undefined;
 
-  const content = (
-    <article className='flex h-full min-w-0 flex-col gap-5 rounded-2xl border border-border bg-ink p-4 transition-[transform,border-color] duration-200 group-hover:border-[#2a3a37] motion-reduce:transition-none'>
+  return (
+    <>
       {/* Header: avatar + name + username */}
       <div className='flex items-center gap-3'>
         <Avatar
@@ -64,9 +65,11 @@ export function BuilderCard({
           <h3 className='truncate text-base font-semibold text-foreground'>
             {displayName}
           </h3>
-          <p className='truncate text-sm text-muted-foreground'>
-            @{username}
-          </p>
+          {username && (
+            <p className='truncate text-sm text-muted-foreground'>
+              @{username}
+            </p>
+          )}
         </div>
       </div>
 
@@ -99,30 +102,52 @@ export function BuilderCard({
         )}
       </div>
 
-      <span aria-hidden className='h-px w-full bg-border' />
+      {showStats && (
+        <>
+          <span aria-hidden className='h-px w-full bg-border' />
 
-      {/* Follower / project counts */}
-      <div className='flex items-center justify-between gap-4'>
-        {followers !== undefined && (
-          <Meta icon={Users} className='shrink-0'>
-            {followers.toLocaleString()}{' '}
-            {followers === 1 ? 'follower' : 'followers'}
-          </Meta>
-        )}
-        {projects !== undefined && (
-          <Meta icon={Folder} className='shrink-0'>
-            {projects.toLocaleString()}{' '}
-            {projects === 1 ? 'project' : 'projects'}
-          </Meta>
-        )}
-      </div>
-    </article>
+          {/* Follower / project counts */}
+          <div className='flex items-center justify-between gap-4'>
+            {followers !== undefined && (
+              <Meta icon={Users} className='shrink-0'>
+                {followers.toLocaleString()}{' '}
+                {followers === 1 ? 'follower' : 'followers'}
+              </Meta>
+            )}
+            {projects !== undefined && (
+              <Meta icon={Folder} className='shrink-0'>
+                {projects.toLocaleString()}{' '}
+                {projects === 1 ? 'project' : 'projects'}
+              </Meta>
+            )}
+          </div>
+        </>
+      )}
+    </>
+  );
+}
+
+/** A single builder card in the discovery grid or /builders directory. */
+export function BuilderCard({
+  builder,
+}: {
+  builder: BuilderCardView;
+}) {
+  const { displayName, detailUrl } = builder;
+
+  const articleClassName = cn(
+    'flex h-full min-w-0 flex-col gap-5 rounded-2xl border border-border bg-ink p-4',
+    // Hover lift belongs to the link wrapper; plain cards (no profile yet) stay static.
+    detailUrl &&
+      'transition-[transform,border-color] duration-200 group-hover:border-[#2a3a37] motion-reduce:transition-none'
   );
 
-  // Builders without a URL-safe username have no profile page to open, so the
-  // card is rendered without a link instead of dead-ending on a uuid path.
   if (!detailUrl) {
-    return content;
+    return (
+      <article className={articleClassName}>
+        <BuilderCardBody builder={builder} />
+      </article>
+    );
   }
 
   return (
@@ -131,7 +156,9 @@ export function BuilderCard({
       aria-label={displayName}
       className='group block h-full min-w-0 rounded-2xl focus-visible:ring-2 focus-visible:ring-primary-500/50 focus-visible:outline-none'
     >
-      {content}
+      <article className={articleClassName}>
+        <BuilderCardBody builder={builder} />
+      </article>
     </Link>
   );
 }
