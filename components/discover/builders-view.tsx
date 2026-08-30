@@ -147,10 +147,23 @@ export function BuildersView() {
     if (trimmed === search) return;
     const timer = setTimeout(() => {
       setCommitted(trimmed);
-      navigate(trimmed, filters, 1, 'replace');
+      // Read the live query string rather than the values captured when this
+      // timer was scheduled. Choosing a sort mid-debounce navigates, and the
+      // captured copy would replace that fresh URL with a stale one, silently
+      // reverting the sort. Everything except the term is carried through
+      // exactly as it stands at fire time.
+      const next = new URLSearchParams(window.location.search);
+      if (trimmed) next.set(SEARCH_PARAM, trimmed);
+      else next.delete(SEARCH_PARAM);
+      // Narrowing the list invalidates the page number.
+      next.delete('page');
+      const query = next.toString();
+      router.replace(query ? `/builders?${query}` : '/builders', {
+        scroll: false,
+      });
     }, SEARCH_DEBOUNCE_MS);
     return () => clearTimeout(timer);
-  }, [searchInput, search, filters, navigate]);
+  }, [searchInput, search, router]);
 
   const applyFilters = (next: FilterValue) => {
     navigate(search, next, 1, 'push');

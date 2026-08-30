@@ -109,7 +109,10 @@ export function DiscoverToolbar({
         ) : null}
       </AnimatePresence>
 
-      <div className='flex flex-1 items-center gap-2 rounded-full border border-[#1f2a28] px-4 py-2.5'>
+      {/* `min-w-0` so the box can shrink below its content width. Without it a
+          flex item refuses to shrink, and the row overflows once the sort pill
+          joins it on a narrow screen. */}
+      <div className='flex min-w-0 flex-1 items-center gap-2 rounded-full border border-[#1f2a28] px-4 py-2.5'>
         <Search
           className='size-4 shrink-0 text-muted-foreground'
           strokeWidth={1.75}
