@@ -13,45 +13,72 @@ import { AnimatePresence, motion } from 'motion/react';
 import { Button } from '@/components/ui/button';
 import { transitions } from '@/lib/motion';
 
+/**
+ * Filter wiring is all or nothing. A page either owns filter state and passes
+ * every handler, or it passes none and the toolbar shows search alone. Making
+ * this a union means a half-wired caller is a type error rather than a toolbar
+ * that quietly drops its filter controls.
+ */
+type FilterProps =
+  | {
+      filtersOpen: boolean;
+      onToggleFilters: () => void;
+      onOpenMobileFilters: () => void;
+      filtersActive: boolean;
+      onReset: () => void;
+    }
+  | {
+      filtersOpen?: never;
+      onToggleFilters?: never;
+      onOpenMobileFilters?: never;
+      filtersActive?: never;
+      onReset?: never;
+    };
+
 export function DiscoverToolbar({
-  filtersOpen,
+  filtersOpen = false,
   onToggleFilters,
   onOpenMobileFilters,
-  filtersActive,
+  filtersActive = false,
   onReset,
+  showSort = true,
   query,
   onQueryChange,
   placeholder = 'Search',
-}: {
-  filtersOpen: boolean;
-  onToggleFilters: () => void;
-  onOpenMobileFilters: () => void;
-  filtersActive: boolean;
-  onReset: () => void;
+}: FilterProps & {
+  /** Hide the sort pill on pages that don't wire sorting yet (e.g. `/builders`). */
+  showSort?: boolean;
   query: string;
   onQueryChange: (value: string) => void;
   placeholder?: string;
 }) {
+  // Pages like `/builders` only wire search today, so they omit the handlers and
+  // the toolbar shows search alone instead of a Filters button that does nothing.
+  // `FilterProps` guarantees these arrive together, so one check covers all three.
+  const showFilters = onToggleFilters !== undefined;
+
   return (
     <div className='flex items-center gap-3'>
-      <Button
-        appearance='outline'
-        intent='secondary'
-        shape='pill'
-        size='small'
-        onClick={onToggleFilters}
-        className='hidden shrink-0 lg:inline-flex'
-      >
-        {filtersOpen ? (
-          <MoveLeft className='size-4' strokeWidth={1.75} aria-hidden />
-        ) : (
-          <Funnel className='size-4' strokeWidth={1.75} aria-hidden />
-        )}
-        {filtersOpen ? 'Hide Filters' : 'Filters'}
-      </Button>
+      {showFilters && (
+        <Button
+          appearance='outline'
+          intent='secondary'
+          shape='pill'
+          size='small'
+          onClick={onToggleFilters}
+          className='hidden shrink-0 lg:inline-flex'
+        >
+          {filtersOpen ? (
+            <MoveLeft className='size-4' strokeWidth={1.75} aria-hidden />
+          ) : (
+            <Funnel className='size-4' strokeWidth={1.75} aria-hidden />
+          )}
+          {filtersOpen ? 'Hide Filters' : 'Filters'}
+        </Button>
+      )}
 
       <AnimatePresence initial={false}>
-        {filtersActive ? (
+        {showFilters && filtersActive ? (
           <motion.div
             key='reset-desktop'
             initial={{ opacity: 0, scale: 0.85 }}
@@ -88,21 +115,23 @@ export function DiscoverToolbar({
         />
       </div>
 
-      <Button
-        appearance='outline'
-        intent='secondary'
-        shape='pill'
-        size='small'
-        iconOnly
-        onClick={onOpenMobileFilters}
-        aria-label='Filters'
-        className='shrink-0 lg:hidden'
-      >
-        <ListFilter className='size-5' strokeWidth={1.75} aria-hidden />
-      </Button>
+      {showFilters && (
+        <Button
+          appearance='outline'
+          intent='secondary'
+          shape='pill'
+          size='small'
+          iconOnly
+          onClick={onOpenMobileFilters}
+          aria-label='Filters'
+          className='shrink-0 lg:hidden'
+        >
+          <ListFilter className='size-5' strokeWidth={1.75} aria-hidden />
+        </Button>
+      )}
 
       <AnimatePresence initial={false}>
-        {filtersActive ? (
+        {showFilters && filtersActive ? (
           <motion.div
             key='reset-mobile'
             initial={{ opacity: 0, scale: 0.85 }}
@@ -126,16 +155,18 @@ export function DiscoverToolbar({
         ) : null}
       </AnimatePresence>
 
-      <Button
-        appearance='outline'
-        intent='secondary'
-        shape='pill'
-        size='small'
-        className='hidden shrink-0 lg:inline-flex'
-      >
-        <ArrowDownUp className='size-4' strokeWidth={1.75} aria-hidden />
-        Newest
-      </Button>
+      {showSort && (
+        <Button
+          appearance='outline'
+          intent='secondary'
+          shape='pill'
+          size='small'
+          className='hidden shrink-0 lg:inline-flex'
+        >
+          <ArrowDownUp className='size-4' strokeWidth={1.75} aria-hidden />
+          Newest
+        </Button>
+      )}
     </div>
   );
 }
