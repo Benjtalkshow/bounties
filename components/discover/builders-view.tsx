@@ -55,15 +55,13 @@ export function BuildersView() {
         count={data?.pagination.total}
       />
 
+      {/* Filters and sort land in follow-up issues (#366, #367), so only the
+          functional controls are wired here; the toolbar hides the rest. */}
       <DiscoverToolbar
-        filtersOpen={false}
-        onToggleFilters={() => {}}
-        onOpenMobileFilters={() => {}}
-        filtersActive={false}
-        onReset={() => {}}
         query={searchInput}
         onQueryChange={setSearchInput}
         placeholder='Search builders by name or username'
+        showSort={false}
       />
 
       <BuildersGrid

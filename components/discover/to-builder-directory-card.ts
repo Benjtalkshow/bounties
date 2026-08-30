@@ -20,6 +20,11 @@ export function toDirectoryBuilderCard(
     avatarSrc: builder.image ?? undefined,
     location: builder.location ?? builder.country ?? undefined,
     skills: builder.skills?.slice(0, MAX_SKILLS),
-    detailUrl: `/builders/${builder.username}`,
+    // Only link out when a username exists; a null username would otherwise
+    // produce a `/builders/null` href. Cards without a target render as plain
+    // (non-clickable) cards.
+    detailUrl: builder.username
+      ? `/builders/${builder.username}`
+      : undefined,
   };
 }
