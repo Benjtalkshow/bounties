@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 
 import { apiFetch } from '@/lib/api/client';
-import type { Paginated, Schemas } from '@/lib/api/types';
+import type { Paginated, Schemas, paths } from '@/lib/api/types';
 
 /**
  * `/users/directory` list item. Derived from the generated OpenAPI schema.
@@ -13,6 +13,49 @@ export type BuilderListItemDto = Schemas['BuilderListItemDto'];
 /** Facets backing the builders filter rail. */
 export type BuilderFilters = Schemas['BuilderFiltersDto'];
 
+/**
+ * The order matters here (it drives the menu), so the list stays hand written,
+ * but it is checked against the generated schema below. A backend enum change
+ * then fails the build instead of shipping a `sort` the API rejects.
+ */
+export const BUILDER_SORT_VALUES = [
+  'newest',
+  'oldest',
+  'name_asc',
+  'name_desc',
+] as const;
+
+export type BuilderSort = (typeof BUILDER_SORT_VALUES)[number];
+
+type SchemaSort = NonNullable<
+  NonNullable<
+    paths['/api/users/directory']['get']['parameters']['query']
+  >['sort']
+>;
+
+/** Compile error if `BUILDER_SORT_VALUES` and the OpenAPI enum drift apart. */
+type AssertExhaustive<T extends true> = T;
+// The alias is the assertion: it exists to be type checked, not to be used.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+type _SortMatchesSchema = AssertExhaustive<
+  [SchemaSort] extends [BuilderSort]
+    ? [BuilderSort] extends [SchemaSort]
+      ? true
+      : false
+    : false
+>;
+
+export function isBuilderSort(value: string): value is BuilderSort {
+  return (BUILDER_SORT_VALUES as readonly string[]).includes(value);
+}
+
+/**
+ * Default to newest rather than the OpenAPI default (name_asc). The directory
+ * is a discovery surface, the existing toolbar chip already reads Newest, and
+ * sending sort explicitly avoids silently depending on the schema default.
+ */
+export const DEFAULT_BUILDER_SORT: BuilderSort = 'newest';
+
 /** Query params `GET /users/directory` accepts from the directory page. */
 export interface BuildersQueryParams {
   page?: number;
@@ -21,7 +64,7 @@ export interface BuildersQueryParams {
   country?: string;
   skills?: string[];
   status?: string;
-  sort?: string;
+  sort?: BuilderSort;
 }
 
 export const buildersKeys = {
