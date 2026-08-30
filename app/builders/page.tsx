@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
 
-import { BuildersView } from '@/components/builders/builders-view';
+import {
+  BuildersView,
+  BuildersViewFallback,
+} from '@/components/discover/builders-view';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
 
@@ -14,7 +17,7 @@ export default function BuildersPage() {
   return (
     <>
       <SiteHeader />
-      <Suspense fallback={null}>
+      <Suspense fallback={<BuildersViewFallback />}>
         <BuildersView />
       </Suspense>
       <SiteFooter />
