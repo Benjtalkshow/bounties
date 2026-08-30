@@ -8,6 +8,8 @@ import { BuilderCardSkeleton } from '@/components/cards/builder-card-skeleton';
 import { Activity01Icon, CodeIcon, GlobeIcon } from '@/components/icons';
 import { Section } from '@/components/marketing/section';
 
+import { BuildersGrid } from './builders-grid';
+import { BuildersSortSelect } from './builders-sort-select';
 import { DiscoverHeader } from './discover-header';
 import { DiscoverToolbar } from './discover-toolbar';
 import {
@@ -17,10 +19,12 @@ import {
   type FilterValue,
 } from './filter-rail';
 import { FilterSheet } from './filter-sheet';
-import { BuildersGrid } from './builders-grid';
 import {
+  DEFAULT_BUILDER_SORT,
+  isBuilderSort,
   useBuilderFilters,
   useBuilders,
+  type BuilderSort,
   type BuildersQueryParams,
 } from './use-builders';
 
@@ -50,13 +54,24 @@ function readPage(params: URLSearchParams): number {
   return Number.isInteger(raw) && raw > 0 ? raw : 1;
 }
 
-function buildQuery(search: string, filters: FilterValue, page: number): string {
+function readSort(params: URLSearchParams): BuilderSort {
+  const raw = params.get('sort');
+  return raw && isBuilderSort(raw) ? raw : DEFAULT_BUILDER_SORT;
+}
+
+function buildQuery(
+  search: string,
+  filters: FilterValue,
+  page: number,
+  sort: BuilderSort
+): string {
   const next = new URLSearchParams();
   if (search) next.set(SEARCH_PARAM, search);
   for (const skill of filters.skills ?? []) next.append('skills', skill);
   if (filters.country?.[0]) next.set('country', filters.country[0]);
   if (filters.status?.[0]) next.set('status', filters.status[0]);
   if (page > 1) next.set('page', String(page));
+  if (sort !== DEFAULT_BUILDER_SORT) next.set('sort', sort);
   return next.toString();
 }
 
@@ -76,11 +91,11 @@ function countryLabel(code: string): string | undefined {
 }
 
 /**
- * The `/builders` directory. Owns the search, filter, and page state and feeds
- * it to `useBuilders`, so the rail, the sheet, and the grid all read from one
- * source. `railOpen` drives the desktop sidebar toggle; `sheetOpen` drives the
- * mobile full-screen sheet, which renders the exact same `FilterRail` instance
- * configuration under a distinct `idPrefix`.
+ * The `/builders` directory. Owns the search, filter, sort, and page state and
+ * feeds it to `useBuilders`, so the rail, the sheet, and the grid all read
+ * from one source. `railOpen` drives the desktop sidebar toggle; `sheetOpen`
+ * drives the mobile full-screen sheet, which renders the exact same
+ * `FilterRail` instance configuration under a distinct `idPrefix`.
  */
 export function BuildersView() {
   const router = useRouter();
@@ -89,6 +104,7 @@ export function BuildersView() {
   const search = searchParams.get(SEARCH_PARAM) ?? '';
   const filters = useMemo(() => readFilters(searchParams), [searchParams]);
   const page = readPage(searchParams);
+  const sort = readSort(searchParams);
 
   const [searchInput, setSearchInput] = useState(search);
   const [railOpen, setRailOpen] = useState(true);
@@ -113,15 +129,16 @@ export function BuildersView() {
       nextSearch: string,
       nextFilters: FilterValue,
       nextPage: number,
-      mode: 'push' | 'replace'
+      mode: 'push' | 'replace',
+      nextSort: BuilderSort = sort
     ) => {
-      const query = buildQuery(nextSearch, nextFilters, nextPage);
+      const query = buildQuery(nextSearch, nextFilters, nextPage, nextSort);
       const href = query ? `/builders?${query}` : '/builders';
       // `scroll: false` so narrowing the list does not yank the page to the top.
       if (mode === 'replace') router.replace(href, { scroll: false });
       else router.push(href, { scroll: false });
     },
-    [router]
+    [router, sort]
   );
 
   // Search uses replace so a debounced keystroke does not add a history entry.
@@ -139,6 +156,10 @@ export function BuildersView() {
     navigate(search, next, 1, 'push');
   };
 
+  const applySort = (next: BuilderSort) => {
+    navigate(search, filters, 1, 'push', next);
+  };
+
   const params = useMemo<BuildersQueryParams>(
     () => ({
       page,
@@ -149,8 +170,9 @@ export function BuildersView() {
       skills: filters.skills?.length ? filters.skills : undefined,
       country: filters.country?.[0],
       status: filters.status?.[0],
+      sort,
     }),
-    [page, search, filters]
+    [page, search, filters, sort]
   );
 
   const { data, isError, isPending } = useBuilders(params);
@@ -207,7 +229,7 @@ export function BuildersView() {
     if (totalPages > 0 && page > totalPages) {
       navigate(search, filters, totalPages, 'replace');
     }
-  }, [page, totalPages, search, filters, navigate]);
+  }, [page, totalPages, search, filters, sort, navigate]);
 
   return (
     <Section className='py-10 lg:py-12' innerClassName='flex flex-col gap-6'>
@@ -226,6 +248,7 @@ export function BuildersView() {
         query={searchInput}
         onQueryChange={setSearchInput}
         placeholder='Search builders, skills, or locations'
+        sort={<BuildersSortSelect value={sort} onChange={applySort} />}
       />
 
       <div className='flex items-start gap-6'>

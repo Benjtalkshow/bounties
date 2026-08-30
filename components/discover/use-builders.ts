@@ -13,6 +13,27 @@ export type BuilderListItemDto = Schemas['BuilderListItemDto'];
 /** Facets backing the builders filter rail. */
 export type BuilderFilters = Schemas['BuilderFiltersDto'];
 
+/** Confirmed against the OpenAPI enum on `GET /users/directory`. */
+export const BUILDER_SORT_VALUES = [
+  'newest',
+  'oldest',
+  'name_asc',
+  'name_desc',
+] as const;
+
+export type BuilderSort = (typeof BUILDER_SORT_VALUES)[number];
+
+export function isBuilderSort(value: string): value is BuilderSort {
+  return (BUILDER_SORT_VALUES as readonly string[]).includes(value);
+}
+
+/**
+ * Default to newest rather than the OpenAPI default (name_asc). The directory
+ * is a discovery surface, the existing toolbar chip already reads Newest, and
+ * sending sort explicitly avoids silently depending on the schema default.
+ */
+export const DEFAULT_BUILDER_SORT: BuilderSort = 'newest';
+
 /** Query params `GET /users/directory` accepts from the directory page. */
 export interface BuildersQueryParams {
   page?: number;
@@ -21,7 +42,7 @@ export interface BuildersQueryParams {
   country?: string;
   skills?: string[];
   status?: string;
-  sort?: string;
+  sort?: BuilderSort;
 }
 
 export const buildersKeys = {

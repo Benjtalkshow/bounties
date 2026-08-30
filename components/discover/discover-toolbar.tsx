@@ -9,6 +9,7 @@ import {
   Search,
 } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
+import type { ReactNode } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { transitions } from '@/lib/motion';
@@ -42,19 +43,26 @@ export function DiscoverToolbar({
   filtersActive = false,
   onReset,
   showSort = true,
+  sort,
   query,
   onQueryChange,
   placeholder = 'Search',
 }: FilterProps & {
-  /** Hide the sort pill on pages that don't wire sorting yet (e.g. `/builders`). */
+  /** Hide the dummy Newest pill on pages that do not wire sorting. */
   showSort?: boolean;
+  /**
+   * Optional sort control. When passed, it replaces the dummy Newest pill.
+   * Pages that omit it keep the existing non-interactive pill, unless they
+   * also pass `showSort={false}`.
+   */
+  sort?: ReactNode;
   query: string;
   onQueryChange: (value: string) => void;
   placeholder?: string;
 }) {
-  // Pages like `/builders` only wire search today, so they omit the handlers and
-  // the toolbar shows search alone instead of a Filters button that does nothing.
-  // `FilterProps` guarantees these arrive together, so one check covers all three.
+  // Pages that omit filter handlers skip the Filters button rather than
+  // rendering one that does nothing. `FilterProps` guarantees the handlers
+  // arrive together, so one check covers all three.
   const showFilters = onToggleFilters !== undefined;
 
   return (
@@ -155,18 +163,19 @@ export function DiscoverToolbar({
         ) : null}
       </AnimatePresence>
 
-      {showSort && (
-        <Button
-          appearance='outline'
-          intent='secondary'
-          shape='pill'
-          size='small'
-          className='hidden shrink-0 lg:inline-flex'
-        >
-          <ArrowDownUp className='size-4' strokeWidth={1.75} aria-hidden />
-          Newest
-        </Button>
-      )}
+      {sort ??
+        (showSort ? (
+          <Button
+            appearance='outline'
+            intent='secondary'
+            shape='pill'
+            size='small'
+            className='hidden shrink-0 lg:inline-flex'
+          >
+            <ArrowDownUp className='size-4' strokeWidth={1.75} aria-hidden />
+            Newest
+          </Button>
+        ) : null)}
     </div>
   );
 }
