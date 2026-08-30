@@ -59,8 +59,8 @@ export function ProjectsView() {
       page,
       limit: PAGE_SIZE,
       search: search || undefined,
-      // `GET /projects` takes a single value for these three, so a multi-select
-      // in the rail sends its first entry. Only `tags` is repeatable.
+      // Exclusive radios in the rail; `[0]` is the selected value or none.
+      // Only `tags` is repeatable.
       category: filters.category[0],
       publicStatus: filters.publicStatus[0],
       originType: filters.originType[0],
