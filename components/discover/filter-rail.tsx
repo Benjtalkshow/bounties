@@ -151,18 +151,27 @@ function RadioRow({
   onClear: () => void;
 }) {
   return (
-    <label htmlFor={id} className='flex cursor-pointer items-center gap-2'>
-      <RadioGroupItem
-        id={id}
-        value={value}
-        onPointerDown={event => {
-          // Clicking the selected radio clears the filter.
-          if (checked) {
-            event.preventDefault();
-            onClear();
-          }
-        }}
-      />
+    // Clearing lives on the label, not the radio, so the circle and its text
+    // behave the same. Radix already no-ops a click on a checked radio, and
+    // preventDefault stops the label forwarding a second click to it, so one
+    // handler covers both targets and fires `onClear` exactly once. Space and
+    // Enter get the same treatment, since a checked radio ignores them and
+    // keyboard users would otherwise have no way to clear the filter.
+    <label
+      htmlFor={id}
+      className='flex cursor-pointer items-center gap-2'
+      onClick={event => {
+        if (!checked) return;
+        event.preventDefault();
+        onClear();
+      }}
+      onKeyDown={event => {
+        if (!checked || (event.key !== ' ' && event.key !== 'Enter')) return;
+        event.preventDefault();
+        onClear();
+      }}
+    >
+      <RadioGroupItem id={id} value={value} />
       <span className='text-sm text-muted-foreground'>{label}</span>
     </label>
   );
